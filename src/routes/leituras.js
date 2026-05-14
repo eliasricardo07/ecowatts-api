@@ -41,8 +41,10 @@ router.post("/", writeLimiter, validateLeitura, async (req, res) => {
     try {
       // 1. Descobrir o id_usuario dono deste aparelho
       //    aparelho → dispositivo → unidade → usuario
-      const { data: apData } = await supabase
+      const { data: aparelhoData } = await supabase
         .from("aparelhos")
+        .select(`
+          id_aparelho,
           dispositivos (
             unidades (
               id_usuario
