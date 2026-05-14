@@ -34,8 +34,59 @@ router.post("/", writeLimiter, validateLeitura, async (req, res) => {
 
     logger.success(`Leitura salva | Aparelho: ${id_aparelho} | ${consumo_watts}W → ${consumo_kwh} kWh`);
 
+    // ============================================================
+    // GAMIFICAÇÃO — Salvar pontos na tabela "pontuacoes"
+    // ============================================================
+    let pontuacao_info = null;
+    try {
+      // 1. Descobrir o id_usuario dono deste aparelho
+      //    aparelho → dispositivo → unidade → usuario
+      const { data: apData } = await supabase
+        .from("aparelhos")
+          dispositivos (
+            unidades (
+              id_usuario
+            )
+          )
+        `)
+        .eq("id_aparelho", id_aparelho)
+        .single();
+
+      const id_usuario = aparelhoData?.dispositivos?.unidades?.id_usuario;
+
+      if (id_usuario) {
+        const pontos_ganhos = 5; // Exemplo: 5 pontos a cada leitura válida registrada
+        const hoje = new Date().toISOString().split("T")[0]; // Retorna no formato YYYY-MM-DD
+
+        // 2. Verificar se o usuário já possui pontuação registrada hoje
+        const { data: pontuacaoData } = await supabase
+          .from("pontuacoes")
+          .select("id_pontuacao, pontos")
+          .eq("id_usuario", id_usuario)
+          .eq("data", hoje)
+          .single();
+
+        if (pontuacaoData) {
+          // 3a. Se já existe, atualiza somando os pontos novos
+          await supabase
+            .from("pontuacoes")
+            .update({ pontos: pontuacaoData.pontos + pontos_ganhos })
+            .eq("id_pontuacao", pontuacaoData.id_pontuacao);
+        } else {
+          // 3b. Se não existe, cria o primeiro registro do dia
+          await supabase
+            .from("pontuacoes")
+            .insert([{ id_usuario, data: hoje, pontos: pontos_ganhos }]);
+        }
+      }
+    } catch (gamificacaoErr) {
+      // Usamos try-catch separado para não quebrar o cadastro da leitura se a pontuação falhar
+      logger.error("Aviso: Falha ao registrar pontuação de gamificação:", gamificacaoErr.message);
+    }
+    // ============================================================
+
     res.status(201).json({
-      message: "Leitura registrada com sucesso",
+      message: "Leitura registrada e pontuação atualizada com sucesso",
       data: data[0],
     });
   } catch (err) {
