@@ -1,6 +1,6 @@
 import { Router } from "express";
 import supabase from "../config/supabase.js";
-import { processarLeitura } from "../services/calculosEnergia.js";
+import { processarLeitura, calcularCO2 } from "../services/calculosEnergia.js";
 import { validateLeitura } from "../middlewares/validateLeitura.js";
 import { writeLimiter } from "../middlewares/rateLimiter.js";
 import logger from "../utils/logger.js";
@@ -12,84 +12,123 @@ const router = Router();
 // ============================================================
 router.post("/", writeLimiter, validateLeitura, async (req, res) => {
   try {
-    const { consumo_watts, id_aparelho } = req.body;
+    const { consumo_watts, id_aparelho, sensor1, sensor2, sensor3, sensor4 } = req.body;
+    let leiturasInseridas = [];
+    let aparelhosProcessados = [];
 
-    // Calcula kWh, custo (R$) e CO₂ a partir da potência bruta
-    const { consumo_kwh, custo_estimado, co2_emitido } = processarLeitura(consumo_watts);
+    // Formato Multi-Sensor Novo
+    if (sensor1 || sensor2 || sensor3 || sensor4) {
+      const sensores = [
+        { id_aparelho: 1, dados: sensor1 },
+        { id_aparelho: 2, dados: sensor2 },
+        { id_aparelho: 3, dados: sensor3 },
+        { id_aparelho: 4, dados: sensor4 },
+      ];
 
-    const { data, error } = await supabase
-      .from("leituras")
-      .insert([
-        {
-          consumo_watts,
-          consumo_kwh,
-          custo_estimado,
-          co2_emitido,
-          id_aparelho,
-        },
-      ])
-      .select();
+      const registros = [];
 
-    if (error) throw error;
+      for (const sensor of sensores) {
+        if (sensor.dados && (sensor.dados.potencia > 0 || sensor.dados.energia > 0 || sensor.dados.custo > 0)) {
+          const consumo_watts_sensor = sensor.dados.potencia;
+          const consumo_kwh_sensor = sensor.dados.energia;
+          const custo_estimado_sensor = sensor.dados.custo;
+          // CO2 ainda é calculado no backend usando a energia informada
+          const co2_emitido_sensor = calcularCO2(consumo_kwh_sensor);
 
-    logger.success(`Leitura salva | Aparelho: ${id_aparelho} | ${consumo_watts}W → ${consumo_kwh} kWh`);
+          registros.push({
+            consumo_watts: consumo_watts_sensor,
+            consumo_kwh: parseFloat(consumo_kwh_sensor.toFixed(8)),
+            custo_estimado: parseFloat(custo_estimado_sensor.toFixed(8)),
+            co2_emitido: parseFloat(co2_emitido_sensor.toFixed(8)),
+            id_aparelho: sensor.id_aparelho,
+          });
+          aparelhosProcessados.push(sensor.id_aparelho);
+        }
+      }
+
+      if (registros.length > 0) {
+        const { data, error } = await supabase.from("leituras").insert(registros).select();
+        if (error) throw error;
+        leiturasInseridas = data;
+        
+        registros.forEach(r => {
+          logger.success(`Leitura salva | Aparelho: ${r.id_aparelho} | ${r.consumo_watts}W → ${r.consumo_kwh} kWh (Multi-Sensor)`);
+        });
+      }
+    } else {
+      // Formato Antigo Single-Sensor
+      const { consumo_kwh, custo_estimado, co2_emitido } = processarLeitura(consumo_watts);
+
+      const { data, error } = await supabase
+        .from("leituras")
+        .insert([{ consumo_watts, consumo_kwh, custo_estimado, co2_emitido, id_aparelho }])
+        .select();
+
+      if (error) throw error;
+      leiturasInseridas = data;
+      aparelhosProcessados.push(id_aparelho);
+      
+      logger.success(`Leitura salva | Aparelho: ${id_aparelho} | ${consumo_watts}W → ${consumo_kwh} kWh (Single-Sensor)`);
+    }
 
     // ============================================================
     // GAMIFICAÇÃO — Salvar pontos na tabela "pontuacoes"
+    // (Apenas consideramos o primeiro aparelho para simplificar a gamificação diária por envio)
     // ============================================================
     let pontuacao_info = null;
     try {
-      // 1. Descobrir o id_usuario dono deste aparelho
-      //    aparelho → dispositivo → unidade → usuario
-      const { data: aparelhoData } = await supabase
-        .from("aparelhos")
-        .select(`
-          id_aparelho,
-          dispositivos (
-            unidades (
-              id_usuario
+      if (aparelhosProcessados.length > 0) {
+        const id_aparelho_gamificacao = aparelhosProcessados[0];
+        // 1. Descobrir o id_usuario dono deste aparelho
+        const { data: aparelhoData } = await supabase
+          .from("aparelhos")
+          .select(`
+            id_aparelho,
+            dispositivos (
+              unidades (
+                id_usuario
+              )
             )
-          )
-        `)
-        .eq("id_aparelho", id_aparelho)
-        .single();
-
-      const id_usuario = aparelhoData?.dispositivos?.unidades?.id_usuario;
-
-      if (id_usuario) {
-        const pontos_ganhos = 5; // Exemplo: 5 pontos a cada leitura válida registrada
-        const hoje = new Date().toISOString().split("T")[0]; // Retorna no formato YYYY-MM-DD
-
-        // 2. Verificar se o usuário já possui pontuação registrada hoje
-        const { data: pontuacaoData } = await supabase
-          .from("pontuacoes")
-          .select("id_pontuacao, pontos")
-          .eq("id_usuario", id_usuario)
-          .eq("data", hoje)
+          `)
+          .eq("id_aparelho", id_aparelho_gamificacao)
           .single();
 
-        if (pontuacaoData) {
-          // 3a. Se já existe, atualiza somando os pontos novos
-          await supabase
+        const id_usuario = aparelhoData?.dispositivos?.unidades?.id_usuario;
+
+        if (id_usuario) {
+          const pontos_ganhos = 5; // Exemplo: 5 pontos a cada leitura válida registrada
+          const hoje = new Date().toISOString().split("T")[0]; // Retorna no formato YYYY-MM-DD
+
+          // 2. Verificar se o usuário já possui pontuação registrada hoje
+          const { data: pontuacaoData } = await supabase
             .from("pontuacoes")
-            .update({ pontos: pontuacaoData.pontos + pontos_ganhos })
-            .eq("id_pontuacao", pontuacaoData.id_pontuacao);
-        } else {
-          // 3b. Se não existe, cria o primeiro registro do dia
-          await supabase
-            .from("pontuacoes")
-            .insert([{ id_usuario, data: hoje, pontos: pontos_ganhos }]);
+            .select("id_pontuacao, pontos")
+            .eq("id_usuario", id_usuario)
+            .eq("data", hoje)
+            .single();
+
+          if (pontuacaoData) {
+            // 3a. Se já existe, atualiza somando os pontos novos
+            await supabase
+              .from("pontuacoes")
+              .update({ pontos: pontuacaoData.pontos + pontos_ganhos })
+              .eq("id_pontuacao", pontuacaoData.id_pontuacao);
+          } else {
+            // 3b. Se não existe, cria o primeiro registro do dia
+            await supabase
+              .from("pontuacoes")
+              .insert([{ id_usuario, data: hoje, pontos: pontos_ganhos }]);
+          }
         }
       }
     } catch (gamificacaoErr) {
-      // Usamos try-catch separado para não quebrar o cadastro da leitura se a pontuação falhar
       logger.error("Aviso: Falha ao registrar pontuação de gamificação:", gamificacaoErr.message);
     }
     // ============================================================
 
     res.status(201).json({
       message: "Leitura registrada e pontuação atualizada com sucesso",
-      data: data[0],
+      data: leiturasInseridas,
     });
   } catch (err) {
     logger.error("Falha ao salvar leitura:", err.message);
