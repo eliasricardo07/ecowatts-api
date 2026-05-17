@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sobre o Projeto | EcoWatts</title>
+    <!-- Fontes e Icones -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Estilos -->
+    <link rel="stylesheet" href="landing.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="assets/logo-oficial.jpeg">
+    <style>
+        .about-section {
+            padding: 100px 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+        }
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+            margin-top: 60px;
+        }
+        @media (max-width: 768px) {
+            .about-grid { grid-template-columns: 1fr; }
+            .about-grid.reverse .content-col { grid-row: 1; }
+        }
+        .about-card {
+            background: rgba(18, 23, 28, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 40px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        .about-card:hover {
+            border-color: rgba(0, 255, 136, 0.3);
+            box-shadow: 0 10px 40px rgba(0, 255, 136, 0.05);
+        }
+        .tech-stack {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+        .tech-badge {
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--accent-green);
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border: 1px solid rgba(0, 255, 136, 0.2);
+        }
+        .architecture-flow {
+            width: 100%;
+            height: auto;
+            border-radius: 16px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.1);
+            filter: brightness(0.9) contrast(1.1);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Fundo de Partículas (Canvas) -->
+    <canvas id="canvas-particles"></canvas>
+    
+    <!-- Efeitos de luz de fundo -->
+    <div class="bg-mesh"></div>
+
+    <!-- Navegação -->
+    <nav class="navbar">
+        <a href="index.html" class="logo" style="text-decoration: none; color: white;">
+            <img src="assets/logo-oficial.jpeg" alt="EcoWatts">
+            EcoWatts
+        </a>
+        <div class="nav-links">
+            <a href="index.html#hardware">Tecnologia</a>
+            <a href="index.html#ia">IA & ESG</a>
+        </div>
+        <a href="login.html" class="btn-secondary">Acessar Painel</a>
+    </nav>
+
+    <!-- Header da Página -->
+    <section class="hero" style="min-height: 50vh; padding-top: 150px;">
+        <div class="badge-premium reveal">Arquitetura de Ponta</div>
+        <h1 class="headline-hero reveal" style="font-size: 3.5rem;">Como construímos o EcoWatts</h1>
+        <p class="subtext-hero reveal" style="max-width: 800px;">Uma união perfeita entre hardware IoT para captação elétrica, backend escalável em Node.js e inteligência de dados na nuvem.</p>
+    </section>
+
+    <!-- Seções de Detalhamento -->
+    <div class="about-section">
+        
+        <!-- Bloco 1: IoT -->
+        <div class="about-grid reveal">
+            <div class="content-col">
+                <h2 style="font-size: 2rem; margin-bottom: 20px; color: #fff;">1. Captação na Raiz (IoT)</h2>
+                <p style="color: var(--text-muted); line-height: 1.8; margin-bottom: 20px;">
+                    O coração do hardware é o microcontrolador <strong>ESP32</strong>, equipado com módulos Wi-Fi nativos. 
+                    Ele trabalha em conjunto com sensores de corrente não-invasivos (SCT013) e invasivos (ACS712) mapeados 
+                    para as 4 saídas principais. O ESP32 processa os picos analógicos e os converte em Watt/hora reais.
+                </p>
+                <div class="tech-stack">
+                    <span class="tech-badge"><i class="fa-solid fa-microchip"></i> ESP32</span>
+                    <span class="tech-badge"><i class="fa-solid fa-bolt"></i> ACS712 / SCT013</span>
+                    <span class="tech-badge"><i class="fa-brands fa-cuttlefish"></i> C++ / Arduino</span>
+                </div>
+            </div>
+            <div class="about-card">
+                <h3 style="color: var(--accent-blue); margin-top: 0;"><i class="fa-solid fa-wifi"></i> Telemetria Contínua</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">
+                    O firmware do dispositivo foi otimizado para não causar gargalos na rede local. Os dados são enviados via HTTP POST em pacotes JSON a cada poucos segundos, garantindo a visualização em tempo real.
+                </p>
+            </div>
+        </div>
+
+        <!-- Bloco 2: Backend e Nuvem -->
+        <div class="about-grid reverse reveal">
+            <div class="about-card">
+                <h3 style="color: var(--accent-green); margin-top: 0;"><i class="fa-solid fa-database"></i> Supabase: O Cérebro Relacional</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">
+                    Utilizamos o Supabase (PostgreSQL) para armazenamento seguro das séries temporais. Toda leitura de sensor gera gatilhos que calculam estimativas de custo baseado nas bandeiras tarifárias atuais e estimativas de CO₂.
+                </p>
+            </div>
+            <div class="content-col">
+                <h2 style="font-size: 2rem; margin-bottom: 20px; color: #fff;">2. Middleware Nuvem (Node.js)</h2>
+                <p style="color: var(--text-muted); line-height: 1.8; margin-bottom: 20px;">
+                    A API Restful foi desenvolvida em <strong>Node.js + Express</strong> e hospedada no Render. Esta camada atua como guarda de segurança (Rate Limiting) e orquestrador de regras de negócio. 
+                    É no backend onde os Watts brutos são transformados em impactos na pegada de carbono e onde as "Gamificações" (Eco Points) são computadas.
+                </p>
+                <div class="tech-stack">
+                    <span class="tech-badge"><i class="fa-brands fa-node-js"></i> Node.js</span>
+                    <span class="tech-badge"><i class="fa-solid fa-server"></i> Express API</span>
+                    <span class="tech-badge"><i class="fa-solid fa-database"></i> PostgreSQL</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bloco 3: Frontend Inteligente -->
+        <div class="about-grid reveal" style="margin-bottom: 80px;">
+            <div class="content-col">
+                <h2 style="font-size: 2rem; margin-bottom: 20px; color: #fff;">3. O Painel de Controle (Dashboard)</h2>
+                <p style="color: var(--text-muted); line-height: 1.8; margin-bottom: 20px;">
+                    O Dashboard foi desenhado seguindo a filosofia de UI "Premium/Futurista". Ele roda integralmente no navegador do usuário conectando-se aos sistemas via JavaScript assíncrono (`fetch`).
+                    Os dados ganham vida em milissegundos utilizando <strong>Chart.js</strong> para renderizar as faturas projetadas e a métrica de gamificação ambiental.
+                </p>
+                <div class="tech-stack">
+                    <span class="tech-badge"><i class="fa-brands fa-html5"></i> HTML5 / CSS3</span>
+                    <span class="tech-badge"><i class="fa-brands fa-js"></i> Vanilla JS</span>
+                    <span class="tech-badge"><i class="fa-solid fa-chart-pie"></i> Chart.js</span>
+                </div>
+            </div>
+            <div class="about-card">
+                <h3 style="color: var(--accent-orange); margin-top: 0;"><i class="fa-solid fa-wand-magic-sparkles"></i> UX Responsiva</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem;">
+                    O sistema busca continuamente por atualizações (Polling). Quando o microondas da casa é ligado, os sensores enviam a carga para o servidor, e o gráfico do painel pisca e se move sozinho.
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Rodapé -->
+    <footer class="footer">
+        <div class="footer-content" style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 40px 5%; border-top: 1px solid rgba(255,255,255,0.05);">
+            <div class="logo">
+                <img src="assets/logo-oficial.jpeg" alt="EcoWatts">
+                EcoWatts
+            </div>
+            <p style="color: var(--text-muted); font-size: 0.85rem;">© 2025 EcoWatts Tech. Construído com sustentabilidade e IA.</p>
+        </div>
+    </footer>
+
+    <!-- Script de Animações Base -->
+    <script>
+        // Animação de Scroll (Reveal)
+        const reveals = document.querySelectorAll('.reveal');
+        window.addEventListener('scroll', () => {
+            const windowHeight = window.innerHeight;
+            const elementVisible = 100;
+            reveals.forEach(reveal => {
+                const elementTop = reveal.getBoundingClientRect().top;
+                if(elementTop < windowHeight - elementVisible) {
+                    reveal.classList.add('active');
+                }
+            });
+        });
+        setTimeout(() => {
+            reveals.forEach(r => { if(r.getBoundingClientRect().top < window.innerHeight) r.classList.add('active'); });
+        }, 100);
+
+        // Canvas Particles Background
+        const canvas = document.getElementById('canvas-particles');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let particlesArray = [];
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 0.5;
+                this.speedX = Math.random() * 0.5 - 0.25;
+                this.speedY = Math.random() * -0.5 - 0.1;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.y < 0) {
+                    this.y = canvas.height;
+                    this.x = Math.random() * canvas.width;
+                }
+            }
+            draw() {
+                ctx.fillStyle = 'rgba(0, 255, 136, 0.4)';
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < 80; i++) {
+            particlesArray.push(new Particle());
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particlesArray.length; i++) {
+                particlesArray[i].update();
+                particlesArray[i].draw();
+            }
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+</html>

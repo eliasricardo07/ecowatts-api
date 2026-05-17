@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | EcoWatts</title>
+    <link rel="stylesheet" href="landing.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="assets/logo-oficial.jpeg">
+    <style>
+        body { display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; background-color: var(--bg-main); color: var(--text-main); font-family: 'Inter', sans-serif; overflow: hidden; }
+        .auth-container { background: rgba(18, 23, 28, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 2.5rem; width: 100%; max-width: 400px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); position: relative; z-index: 10; }
+        .auth-logo { display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 700; margin-bottom: 2rem; gap: 10px; color: #fff; }
+        .auth-logo img { width: 32px; height: auto; }
+        .form-group { margin-bottom: 1.2rem; }
+        .form-group label { display: block; font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.4rem; }
+        .form-control { width: 100%; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 0.8rem 1rem; color: #fff; font-family: 'Inter', sans-serif; outline: none; transition: all 0.3s ease; box-sizing: border-box; }
+        .form-control:focus { border-color: var(--accent-green); box-shadow: 0 0 0 2px rgba(0,255,136,0.2); }
+        .btn-auth { width: 100%; background: var(--accent-green); color: #000; border: none; border-radius: 8px; padding: 0.9rem; font-weight: 600; font-size: 1rem; cursor: pointer; transition: all 0.3s ease; margin-top: 1rem; }
+        .btn-auth:hover { box-shadow: 0 0 15px rgba(0,255,136,0.4); transform: translateY(-2px); }
+        .auth-links { text-align: center; margin-top: 1.5rem; font-size: 0.85rem; color: var(--text-muted); }
+        .auth-links a { color: var(--accent-green); text-decoration: none; cursor: pointer; transition: color 0.3s ease; }
+        .auth-links a:hover { color: #00ff88; text-decoration: underline; }
+        .hidden { display: none !important; }
+        #auth-error, #auth-success { margin-bottom: 1rem; padding: 0.75rem; border-radius: 8px; font-size: 0.85rem; display: none; text-align: center; }
+        #auth-error { background: rgba(255,69,58,0.1); color: var(--accent-red); border: 1px solid rgba(255,69,58,0.2); }
+        #auth-success { background: rgba(0,255,136,0.1); color: var(--accent-green); border: 1px solid rgba(0,255,136,0.2); }
+    </style>
+</head>
+<body>
+
+    <!-- Fundo animado -->
+    <canvas id="canvas-particles"></canvas>
+    <div class="bg-mesh"></div>
+
+    <div class="auth-container">
+        <a href="index.html" class="auth-logo" style="text-decoration: none;">
+            <img src="assets/logo-oficial.jpeg" alt="EcoWatts"> EcoWatts
+        </a>
+
+        <div id="auth-error"></div>
+        <div id="auth-success"></div>
+
+        <!-- LOGIN FORM -->
+        <form id="login-form">
+            <h3 style="margin-top: 0; margin-bottom: 1.5rem; text-align: center;">Bem-vindo de volta</h3>
+            <div class="form-group">
+                <label for="login-email">Email</label>
+                <input type="email" id="login-email" class="form-control" placeholder="seu@email.com" required>
+            </div>
+            <div class="form-group">
+                <label for="login-password">Senha</label>
+                <input type="password" id="login-password" class="form-control" placeholder="••••••••" required>
+            </div>
+            <div style="text-align: right; margin-bottom: 1rem;">
+                <a href="#" id="show-reset" style="font-size: 0.8rem; color: var(--text-muted); text-decoration: none;">Esqueceu a senha?</a>
+            </div>
+            <button type="submit" class="btn-auth">Entrar na Plataforma</button>
+            <div class="auth-links">
+                Não possui conta? <a id="show-register">Criar agora</a>
+            </div>
+        </form>
+
+        <!-- REGISTER FORM -->
+        <form id="register-form" class="hidden">
+            <h3 style="margin-top: 0; margin-bottom: 1.5rem; text-align: center;">Criar Nova Conta</h3>
+            <div class="form-group">
+                <label for="register-name">Nome Completo</label>
+                <input type="text" id="register-name" class="form-control" placeholder="Ex: João Silva" required>
+            </div>
+            <div class="form-group">
+                <label for="register-email">Email</label>
+                <input type="email" id="register-email" class="form-control" placeholder="seu@email.com" required>
+            </div>
+            <div class="form-group">
+                <label for="register-password">Senha</label>
+                <input type="password" id="register-password" class="form-control" placeholder="Min. 6 caracteres" required minlength="6">
+            </div>
+            <button type="submit" class="btn-auth">Cadastrar</button>
+            <div class="auth-links">
+                Já possui conta? <a id="show-login">Fazer Login</a>
+            </div>
+        </form>
+
+        <!-- RESET PASSWORD FORM -->
+        <form id="reset-form" class="hidden">
+            <h3 style="margin-top: 0; margin-bottom: 1.5rem; text-align: center;">Recuperar Senha</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted); text-align: center; margin-bottom: 1.5rem;">Digite seu email para receber um link de redefinição.</p>
+            <div class="form-group">
+                <label for="reset-email">Email</label>
+                <input type="email" id="reset-email" class="form-control" placeholder="seu@email.com" required>
+            </div>
+            <button type="submit" class="btn-auth">Enviar Link</button>
+            <div class="auth-links">
+                Lembrou a senha? <a id="show-login-from-reset">Voltar ao Login</a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="assets/config.js"></script>
+    <script src="assets/auth.js"></script>
+    <script>
+        // Animação do background (reaproveitada do index.html)
+        const canvas = document.getElementById('canvas-particles');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        let particlesArray = [];
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width; this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 0.5; this.speedX = Math.random() * 0.5 - 0.25; this.speedY = Math.random() * -0.5 - 0.1;
+            }
+            update() {
+                this.x += this.speedX; this.y += this.speedY;
+                if (this.y < 0) { this.y = canvas.height; this.x = Math.random() * canvas.width; }
+            }
+            draw() { ctx.fillStyle = 'rgba(0, 255, 136, 0.4)'; ctx.beginPath(); ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); ctx.fill(); }
+        }
+        for (let i = 0; i < 60; i++) particlesArray.push(new Particle());
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particlesArray.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animate);
+        }
+        animate();
+        window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
+
+        // Lógica de Alternância de Formulários
+        const loginForm = document.getElementById('login-form');
+        const registerForm = document.getElementById('register-form');
+        const resetForm = document.getElementById('reset-form');
+        const errDiv = document.getElementById('auth-error');
+        const succDiv = document.getElementById('auth-success');
+
+        function hideMessages() { errDiv.style.display = 'none'; succDiv.style.display = 'none'; }
+        function showError(msg) { errDiv.textContent = msg; errDiv.style.display = 'block'; succDiv.style.display = 'none'; }
+        function showSuccess(msg) { succDiv.textContent = msg; succDiv.style.display = 'block'; errDiv.style.display = 'none'; }
+
+        document.getElementById('show-register').onclick = () => { loginForm.classList.add('hidden'); registerForm.classList.remove('hidden'); hideMessages(); };
+        document.getElementById('show-login').onclick = () => { registerForm.classList.add('hidden'); loginForm.classList.remove('hidden'); hideMessages(); };
+        document.getElementById('show-reset').onclick = (e) => { e.preventDefault(); loginForm.classList.add('hidden'); resetForm.classList.remove('hidden'); hideMessages(); };
+        document.getElementById('show-login-from-reset').onclick = () => { resetForm.classList.add('hidden'); loginForm.classList.remove('hidden'); hideMessages(); };
+
+        // Integração Supabase Auth
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            hideMessages();
+            const btn = e.target.querySelector('button');
+            const origText = btn.textContent;
+            btn.textContent = 'Autenticando...'; btn.disabled = true;
+            try {
+                await window.Auth.login(document.getElementById('login-email').value, document.getElementById('login-password').value);
+                window.location.href = 'demo-dashboard.html';
+            } catch (error) {
+                showError('Falha no login: ' + (error.message || 'Verifique suas credenciais.'));
+            } finally {
+                btn.textContent = origText; btn.disabled = false;
+            }
+        });
+
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            hideMessages();
+            const btn = e.target.querySelector('button');
+            const origText = btn.textContent;
+            btn.textContent = 'Processando...'; btn.disabled = true;
+            try {
+                await window.Auth.register(
+                    document.getElementById('register-email').value, 
+                    document.getElementById('register-password').value,
+                    document.getElementById('register-name').value
+                );
+                showSuccess('Conta criada com sucesso! Verifique seu email para confirmar ou tente logar.');
+                setTimeout(() => document.getElementById('show-login').click(), 3000);
+            } catch (error) {
+                showError('Erro no cadastro: ' + error.message);
+            } finally {
+                btn.textContent = origText; btn.disabled = false;
+            }
+        });
+
+        resetForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            hideMessages();
+            const btn = e.target.querySelector('button');
+            const origText = btn.textContent;
+            btn.textContent = 'Enviando...'; btn.disabled = true;
+            try {
+                await window.Auth.resetPassword(document.getElementById('reset-email').value);
+                showSuccess('Link de recuperação enviado para o seu email.');
+            } catch (error) {
+                showError('Erro: ' + error.message);
+            } finally {
+                btn.textContent = origText; btn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

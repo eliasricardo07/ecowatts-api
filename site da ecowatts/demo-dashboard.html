@@ -1,0 +1,1450 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoWatts | Intelligence OS</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="icon" type="image/png" href="assets/logo-oficial.jpeg">
+</head>
+<body>
+
+    <div class="app-container">
+        
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="brand">
+                <img src="assets/logo-oficial.jpeg" alt="EcoWatts" class="brand-logo">
+                <span class="brand-name">EcoWatts</span>
+            </div>
+            
+            <nav class="nav-list">
+                <div class="nav-item">
+                    <a class="nav-link active" data-target="view-command">
+                        <i class="fa-solid fa-house"></i>
+                        <span>Central de Comando</span>
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a class="nav-link" data-target="view-map">
+                        <i class="fa-solid fa-map"></i>
+                        <span>Mapa Energético</span>
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a class="nav-link" data-target="view-ecopoints">
+                        <i class="fa-solid fa-leaf"></i>
+                        <span>Eco Pontos</span>
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a class="nav-link" data-target="view-marketplace">
+                        <i class="fa-solid fa-cart-shopping"></i>
+                        <span>Marketplace & Parceiros</span>
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a class="nav-link" data-target="view-community">
+                        <i class="fa-solid fa-users"></i>
+                        <span>Comunidade Global</span>
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a class="nav-link" data-target="view-finance">
+                        <i class="fa-solid fa-wallet"></i>
+                        <span>Finanças & Histórico</span>
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a class="nav-link" data-target="view-amazon">
+                        <i class="fa-solid fa-tree"></i>
+                        <span>Modo Amazônia</span>
+                    </a>
+                </div>
+            </nav>
+
+            <div class="nav-list mt-auto">
+                <div class="nav-item">
+                    <a class="nav-link" data-target="view-settings">
+                        <i class="fa-solid fa-gear"></i>
+                        <span>Configurações</span>
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="index.html" class="nav-link">
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                        <span>Sair do Sistema</span>
+                    </a>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            
+            <header class="topbar">
+                <div class="search-container">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" class="search-input" placeholder="Buscar dispositivos, alertas, relatórios...">
+                </div>
+                
+                <div class="topbar-actions">
+                    <div class="status-badge">
+                        <span class="dot"></span>
+                        Sincronizado
+                    </div>
+                    <button class="notif-btn" title="Ajuda">
+                        <i class="fa-regular fa-circle-question"></i>
+                    </button>
+                    <button class="notif-btn" id="notifBtn">
+                        <i class="fa-regular fa-bell"></i>
+                        <span class="notif-badge">3</span>
+                    </button>
+                </div>
+
+                <!-- Notif Dropdown -->
+                <div id="notifDropdown" class="notif-dropdown">
+                    <div class="notif-header">Alertas do Modo Energético</div>
+                    <div class="notif-list">
+                        <div class="notif-item">
+                            <i class="fa-solid fa-triangle-exclamation" style="background: rgba(255, 69, 58, 0.1); color: var(--accent-red);"></i>
+                            <div>
+                                <div class="text-xs font-bold">Pico de Consumo: Cozinha</div>
+                                <p class="text-xs text-muted">Consumo ultrapassou 2.0kW agora.</p>
+                            </div>
+                        </div>
+                        <div class="notif-item">
+                            <i class="fa-solid fa-wand-magic-sparkles" style="background: rgba(0, 163, 255, 0.1); color: var(--accent-blue);"></i>
+                            <div>
+                                <div class="text-xs font-bold">Nova sugestão de IA</div>
+                                <p class="text-xs text-muted">Ajuste o Ar-condicionado para economizar R$ 12,00.</p>
+                            </div>
+                        </div>
+                        <div class="notif-item">
+                            <i class="fa-solid fa-leaf" style="background: rgba(0, 229, 153, 0.1); color: var(--accent-green);"></i>
+                            <div>
+                                <div class="text-xs font-bold">Meta de Carbono Batida!</div>
+                                <p class="text-xs text-muted">Você evitou 84kg de CO2 este mês.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <div class="view-container">
+                
+                <!-- VIEW: CENTRAL DE COMANDO -->
+                <section id="view-command" class="view-section active">
+                    <header class="page-header">
+                        <h1 class="page-title">Central de Comando</h1>
+                        <p class="page-subtitle">Visão geral da sua energia, economia e impacto ambiental.</p>
+                    </header>
+
+                    <div class="bento-grid">
+                        <!-- KPI 1 -->
+                        <div class="glass-card kpi-card">
+                            <div class="kpi-label">
+                                <div class="kpi-icon-box" style="background: rgba(0, 229, 153, 0.1); color: var(--accent-green);">
+                                    <i class="fa-solid fa-bolt"></i>
+                                </div>
+                                Consumo Hoje
+                            </div>
+                            <div class="kpi-value-row">
+                                <div class="kpi-value">12,4 <span class="kpi-unit">kWh</span></div>
+                                <canvas id="sparkline1" class="kpi-sparkline"></canvas>
+                            </div>
+                            <div class="kpi-footer">
+                                <span>vs ontem 14,1 kWh</span>
+                                <span class="trend-up"><i class="fa-solid fa-caret-down"></i> 12%</span>
+                            </div>
+                        </div>
+                        <!-- KPI 2 -->
+                        <div class="glass-card kpi-card">
+                            <div class="kpi-label">
+                                <div class="kpi-icon-box" style="background: rgba(0, 163, 255, 0.1); color: var(--accent-blue);">
+                                    <i class="fa-solid fa-receipt"></i>
+                                </div>
+                                Previsão da Conta
+                            </div>
+                            <div class="kpi-value-row">
+                                <div class="kpi-value">R$ 142<span class="kpi-unit">,00</span></div>
+                                <canvas id="sparkline2" class="kpi-sparkline"></canvas>
+                            </div>
+                            <div class="kpi-footer">
+                                <span>Vencimento: 15 Jun 2025</span>
+                                <span class="trend-up"><i class="fa-solid fa-caret-down"></i> 18%</span>
+                            </div>
+                        </div>
+                        <!-- KPI 3 -->
+                        <div class="glass-card kpi-card">
+                            <div class="kpi-label">
+                                <div class="kpi-icon-box" style="background: rgba(0, 229, 153, 0.1); color: var(--accent-green);">
+                                    <i class="fa-solid fa-leaf"></i>
+                                </div>
+                                Economia do Mês
+                            </div>
+                            <div class="kpi-value-row">
+                                <div class="kpi-value">R$ 45,50</div>
+                                <canvas id="sparkline3" class="kpi-sparkline"></canvas>
+                            </div>
+                            <div class="kpi-footer">
+                                <span>vs mês anterior</span>
+                                <span class="trend-up"><i class="fa-solid fa-caret-up"></i> 15%</span>
+                            </div>
+                        </div>
+                        <!-- KPI 4 -->
+                        <div class="glass-card kpi-card">
+                            <div class="kpi-label">
+                                <div class="kpi-icon-box" style="background: rgba(0, 229, 153, 0.1); color: var(--accent-green);">
+                                    <i class="fa-solid fa-tree"></i>
+                                </div>
+                                Carbono Evitado
+                            </div>
+                            <div class="kpi-value-row">
+                                <div class="kpi-value">84,2 <span class="kpi-unit">kg</span></div>
+                                <div style="font-size: 2rem; color: var(--accent-green);"><i class="fa-solid fa-tree"></i></div>
+                            </div>
+                            <div class="kpi-footer">
+                                <span>Árvores equivalentes: 3,5</span>
+                            </div>
+                        </div>
+
+                        <!-- Insight Executivo / Ação Recomendada -->
+                        <div class="glass-card command-insight-card" style="grid-column: span 12;">
+                            <div class="command-insight-left">
+                                <div class="command-insight-badge"><i class="fa-solid fa-wand-magic-sparkles"></i> Insight principal da IA</div>
+                                <h3>Maior oportunidade de economia: Cozinha no horário de pico</h3>
+                                <p>O uso simultâneo de Air Fryer e Micro-ondas entre 19h e 21h elevou o consumo em 32%. Reagendar um desses aparelhos reduz picos e protege sua previsão de conta.</p>
+                            </div>
+                            <div class="command-insight-metrics">
+                                <div><small>Economia potencial</small><strong>R$ 18,60/mês</strong></div>
+                                <div><small>Risco atual</small><strong class="risk-high">Alto</strong></div>
+                                <div><small>Impacto evitável</small><strong>1,2 kg CO₂/mês</strong></div>
+                            </div>
+                            <button class="btn-action primary command-apply-btn"><i class="fa-solid fa-bolt"></i> Aplicar sugestão</button>
+                        </div>
+
+                        <!-- Gráfico de Consumo Principal -->
+                        <div class="glass-card" style="grid-column: span 8;">
+                            <div class="d-flex justify-between align-center mb-4">
+                                <h3><i class="fa-solid fa-chart-line text-green mr-2" style="color: var(--accent-green);"></i> Consumo em Tempo Real</h3>
+                                <div class="chart-toggle-group main-consumption-tabs" aria-label="Período do consumo em tempo real">
+                                    <button type="button" class="chart-toggle" data-consumption-period="1h">1H</button>
+                                    <button type="button" class="chart-toggle active" data-consumption-period="24h">24H</button>
+                                    <button type="button" class="chart-toggle" data-consumption-period="7d">7D</button>
+                                    <button type="button" class="chart-toggle" data-consumption-period="30d">30D</button>
+                                </div>
+                            </div>
+                            <div style="height: 300px;">
+                                <canvas id="mainConsumptionChart"></canvas>
+                            </div>
+                            <div class="chart-context-row" id="mainConsumptionContext">Visualizando consumo das últimas 24 horas • Pico registrado às 16h.</div>
+                        </div>
+
+                        <!-- IA Insights -->
+                        <div class="glass-card ia-card">
+                            <div class="ia-header">
+                                <h3><i class="fa-solid fa-wand-magic-sparkles mr-2" style="color: var(--accent-blue);"></i> IA EcoWatts</h3>
+                                <span class="ia-badge">Insights Inteligentes</span>
+                            </div>
+                            <div class="ia-content">
+                                <div class="ia-icon-circle">
+                                    <i class="fa-solid fa-leaf"></i>
+                                </div>
+                                <h4 class="mb-2">Reduza o consumo no horário de pico</h4>
+                                <p class="text-sm">Detectamos que o Ar-condicionado (Sala) e o Air Fryer estão elevando seu consumo entre 18h e 21h.</p>
+                                <div style="margin-top: 1rem;">
+                                    <span style="color: var(--accent-green); font-size: 0.8rem; font-weight: 700;">Ações recomendadas:</span>
+                                    <ul class="ia-recommendations">
+                                        <li class="ia-rec-item"><i class="fa-solid fa-circle-check"></i> Agende o Air Fryer para antes das 18h.</li>
+                                        <li class="ia-rec-item"><i class="fa-solid fa-circle-check"></i> Ajuste o Ar-condicionado para 23 °C no período da noite.</li>
+                                    </ul>
+                                </div>
+                                <p class="mt-3 text-sm" style="color: var(--accent-green);">Economia potencial: <strong>R$ 31,80 este mês</strong></p>
+                            </div>
+                        </div>
+
+                        <!-- Dispositivos -->
+                        <div class="glass-card" style="grid-column: span 4;">
+                            <h4 class="mb-3"><i class="fa-solid fa-plug-circle-bolt mr-2" style="color: var(--accent-blue);"></i> Dispositivos que Mais Consomem</h4>
+                            <table class="data-table">
+                                <tbody>
+                                    <tr>
+                                        <td><i class="fa-solid fa-snowflake mr-2"></i> Ar-condicionado (Sala)</td>
+                                        <td class="text-right">5,20 kWh</td>
+                                        <td class="text-right text-muted">41%</td>
+                                    </tr>
+                                    <tr>
+                                        <td><i class="fa-solid fa-kitchen-set mr-2"></i> Air Fryer (Cozinha)</td>
+                                        <td class="text-right">2,10 kWh</td>
+                                        <td class="text-right text-muted">17%</td>
+                                    </tr>
+                                    <tr>
+                                        <td><i class="fa-solid fa-shower mr-2"></i> Chuveiro (Banheiro)</td>
+                                        <td class="text-right">1,45 kWh</td>
+                                        <td class="text-right text-muted">11%</td>
+                                    </tr>
+                                    <tr>
+                                        <td><i class="fa-solid fa-tv mr-2"></i> Televisão (Sala)</td>
+                                        <td class="text-right">0,95 kWh</td>
+                                        <td class="text-right text-muted">8%</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <a href="#" class="card-link">Ver todos os dispositivos <i class="fa-solid fa-chevron-right"></i></a>
+                        </div>
+
+                        <!-- Resumo Financeiro -->
+                        <div class="glass-card" style="grid-column: span 4;">
+                            <h4 class="mb-3"><i class="fa-solid fa-circle-dollar-to-slot mr-2" style="color: var(--accent-green);"></i> Resumo Financeiro</h4>
+                            <table class="data-table">
+                                <tbody>
+                                    <tr>
+                                        <td>Gasto este mês</td>
+                                        <td class="text-right">R$ 94,50</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="color: var(--accent-green);">Economia este mês</td>
+                                        <td class="text-right" style="color: var(--accent-green);">R$ 45,50</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Fatura prevista</td>
+                                        <td class="text-right">R$ 142,00</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Vencimento</td>
+                                        <td class="text-right">15 Jun 2025</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <a href="#" class="card-link">Ver histórico financeiro <i class="fa-solid fa-chevron-right"></i></a>
+                        </div>
+
+                        <!-- Impacto Ambiental -->
+                        <div class="glass-card" style="grid-column: span 4;">
+                            <h4 class="mb-3"><i class="fa-solid fa-leaf mr-2" style="color: var(--accent-green);"></i> Impacto Ambiental</h4>
+                            <div class="d-flex gap-4">
+                                <div style="flex: 1;">
+                                    <span class="text-xs text-muted">Carbono evitado</span>
+                                    <div class="font-bold">84,2 <small>kg CO₂</small></div>
+                                    <div style="height: 60px; margin-top: 10px;">
+                                        <canvas id="carbonImpactChart"></canvas>
+                                    </div>
+                                </div>
+                                <div style="flex: 1; border-left: 1px solid var(--card-border); padding-left: 1rem;">
+                                    <span class="text-xs text-muted">Árvores equivalentes</span>
+                                    <div class="font-bold">3,5</div>
+                                    <p class="text-xs">Plantas neste mês</p>
+                                    <div style="font-size: 2.5rem; color: var(--accent-green); margin-top: 5px; text-align: center;">
+                                        <i class="fa-solid fa-tree"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="#" class="card-link">Ver relatório completo <i class="fa-solid fa-chevron-right"></i></a>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- VIEW: MAPA DA CASA / SENSORES ESP32 -->
+                <section id="view-map" class="view-section">
+                    <header class="page-header residential-map-header">
+                        <h1 class="page-title"><i class="fa-solid fa-house-signal" style="color:var(--accent-green); margin-right:10px;"></i>Mapa da Casa</h1>
+                        <p class="page-subtitle">Acompanhe os 4 sensores conectados ao ESP32, veja o consumo em tempo real e organize os aparelhos de cada ponto da casa.</p>
+                    </header>
+
+                    <div class="home-sensor-overview">
+                        <div class="sensor-summary-card live-card">
+                            <span class="summary-label">Consumo agora</span>
+                            <strong id="sensorTotalNow">2.950 W</strong>
+                            <small>somando os sensores online</small>
+                        </div>
+                        <div class="sensor-summary-card">
+                            <span class="summary-label">Sensores online</span>
+                            <strong id="sensorOnlineCount">4/4</strong>
+                            <small>última leitura há poucos segundos</small>
+                        </div>
+                        <div class="sensor-summary-card">
+                            <span class="summary-label">Maior consumo</span>
+                            <strong id="sensorHighestRoom">Cozinha</strong>
+                            <small id="sensorHighestValue">2.100 W agora</small>
+                        </div>
+                        <div class="sensor-summary-card">
+                            <span class="summary-label">Conta prevista</span>
+                            <strong>R$ 142,00</strong>
+                            <small>estimativa do mês</small>
+                        </div>
+                    </div>
+
+                    <div class="esp32-live-display glass-card">
+                        <div class="esp32-live-left">
+                            <div class="live-pulse-dot"></div>
+                            <div>
+                                <h3>Visor em tempo real da ESP32</h3>
+                                <p>Quando o hardware estiver conectado, este painel mostrará a leitura atual enviada pelos sensores.</p>
+                            </div>
+                        </div>
+                        <div class="esp32-live-values">
+                            <div><span>Potência</span><strong id="esp32Watts">2.100 W</strong></div>
+                            <div><span>Tensão</span><strong id="esp32Voltage">127 V</strong></div>
+                            <div><span>Corrente</span><strong id="esp32Current">16,5 A</strong></div>
+                            <div><span>Status</span><strong id="esp32Status">Online</strong></div>
+                        </div>
+                    </div>
+
+                    <div class="sensor-map-layout">
+                        <div class="sensor-map-main">
+                            <div class="map-section-toolbar">
+                                <div>
+                                    <h3 class="mb-1" style="font-size: 1.1rem; font-weight: 700;">Sensores da casa</h3>
+                                    <p class="text-xs text-muted">O projeto trabalha com 4 sensores físicos padrão. Você pode renomear cada sensor, escolher o cômodo e adicionar aparelhos associados.</p>
+                                </div>
+                                <div class="map-toolbar-actions">
+                                    <button type="button" id="configureSelectedSensorBtn" class="btn-action">
+                                        <i class="fa-solid fa-gear"></i> Configurar sensor
+                                    </button>
+                                    <button type="button" id="addApplianceBtn" class="btn-action add-utensil-btn">
+                                        <i class="fa-solid fa-plus"></i> Adicionar aparelho
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="sensor-cards-grid" id="sensorCardsGrid">
+                                <!-- preenchido pelo script.js -->
+                            </div>
+
+                            <div class="glass-card mt-4 sensor-help-card">
+                                <div class="d-flex align-center gap-3">
+                                    <div class="sensor-help-icon"><i class="fa-solid fa-circle-info"></i></div>
+                                    <div>
+                                        <h4>Como interpretar?</h4>
+                                        <p>O sensor mede o consumo daquele ponto da casa. Os aparelhos cadastrados ajudam a explicar quais itens podem estar puxando energia naquele cômodo.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <aside class="room-analytics-panel sensor-detail-panel">
+                            <div class="panel-header">
+                                <h3 id="panelRoomName" style="font-size: 1rem; font-weight: 700;">Sensor 1 — Cozinha</h3>
+                                <span id="sensorPanelStatus" class="sensor-status-pill online">Online</span>
+                            </div>
+                            <div class="panel-content">
+                                <div class="sensor-reading-block">
+                                    <div class="panel-kpi-icon" style="color: var(--accent-green); background: rgba(0, 229, 153, 0.1);"><i class="fa-solid fa-bolt"></i></div>
+                                    <div>
+                                        <div class="text-xs font-bold" style="color: var(--accent-green);">Leitura atual</div>
+                                        <div id="selectedSensorReading" class="sensor-reading-main">2.100 W</div>
+                                        <div id="selectedSensorUpdated" class="text-xs text-muted">Atualizado agora</div>
+                                    </div>
+                                </div>
+
+                                <div class="sensor-metric-grid mb-4">
+                                    <div class="sensor-mini-metric"><span>Cômodo</span><strong id="selectedSensorRoom">Cozinha</strong></div>
+                                    <div class="sensor-mini-metric"><span>Tensão</span><strong id="selectedSensorVoltage">127 V</strong></div>
+                                    <div class="sensor-mini-metric"><span>Corrente</span><strong id="selectedSensorCurrent">16,5 A</strong></div>
+                                    <div class="sensor-mini-metric"><span>Aparelhos</span><strong id="selectedSensorApplianceCount">3</strong></div>
+                                </div>
+
+                                <div class="mb-4">
+                                    <h4 class="text-xs font-bold mb-2">Últimas leituras do sensor</h4>
+                                    <div style="height: 130px;">
+                                        <canvas id="sensorDetailChart"></canvas>
+                                    </div>
+                                </div>
+
+                                <div class="device-list-container">
+                                    <div class="d-flex justify-between align-center mb-2">
+                                        <h4 class="text-xs font-bold">Aparelhos associados</h4>
+                                        <button type="button" id="addApplianceSmallBtn" class="mini-link-btn"><i class="fa-solid fa-plus"></i> adicionar</button>
+                                    </div>
+                                    <table class="device-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Aparelho</th>
+                                                <th>Potência</th>
+                                                <th>Ação</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="sensorApplianceTableBody">
+                                            <!-- preenchido pelo script.js -->
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="glass-card mt-4 p-3" style="background: rgba(0, 229, 153, 0.03); border: 1px solid rgba(0, 229, 153, 0.1);">
+                                    <div class="d-flex align-center gap-2 mb-2" style="color: var(--accent-green);">
+                                        <i class="fa-solid fa-lightbulb"></i>
+                                        <span class="text-xs font-bold">Dica simples</span>
+                                    </div>
+                                    <p class="text-xs text-muted" id="sensorSimpleTip">Evite usar Air Fryer e Micro-ondas juntos no horário de pico.</p>
+                                </div>
+                            </div>
+                            <div class="panel-actions">
+                                <button type="button" class="btn-action primary" id="configureSensorPanelBtn"><i class="fa-solid fa-gear"></i> Configurar este sensor</button>
+                                <button type="button" class="btn-action" id="addAppliancePanelBtn"><i class="fa-solid fa-plus"></i> Adicionar aparelho</button>
+                                <button type="button" class="btn-action" id="simulateReadingBtn"><i class="fa-solid fa-wave-square"></i> Simular nova leitura</button>
+                            </div>
+                        </aside>
+                    </div>
+                </section>
+
+                <!-- VIEW: ECO PONTOS -->
+                <section id="view-ecopoints" class="view-section">
+                    <header class="page-header">
+                        <h1 class="page-title"><i class="fa-solid fa-leaf" style="color:var(--accent-green); margin-right: 10px;"></i>Eco Pontos</h1>
+                        <p class="page-subtitle">Economize energia, ganhe pontos e suba de nível por um futuro mais sustentável.</p>
+                    </header>
+
+                    <!-- Banner de Nível Consolidado -->
+                    <div class="glass-card mb-4" style="display:grid; grid-template-columns: 1.2fr 1fr 1fr 1.5fr 1fr; gap:1.5rem; align-items:center; padding:1.5rem 2rem;">
+                        <!-- Gauge de Nível -->
+                        <div style="display:flex; align-items:center; gap:1.25rem; border-right: 1px solid var(--card-border); padding-right:1.5rem;">
+                            <div class="level-gauge-container" style="position:relative; width:90px; height:90px; flex-shrink:0;">
+                                <canvas id="levelGaugeChart"></canvas>
+                                <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;">
+                                    <i class="fa-solid fa-seedling" style="color:var(--accent-green);font-size:1.5rem;"></i>
+                                </div>
+                            </div>
+                            <div>
+                                <span class="text-xs text-muted">Nível atual</span>
+                                <h3 style="color:var(--accent-green); margin: 2px 0;">Broto</h3>
+                                <span class="text-xs text-muted">Nível 2</span>
+                            </div>
+                        </div>
+
+                        <!-- Pontos -->
+                        <div style="border-right: 1px solid var(--card-border); padding-right:1.5rem;">
+                            <span class="text-xs text-muted">Seus pontos</span>
+                            <div style="display:flex; align-items:center; gap:8px; margin: 4px 0;">
+                                <h2 style="margin:0;">2.450</h2>
+                                <div style="width:24px; height:24px; border-radius:50%; border:1px solid var(--accent-green); display:flex; justify-content:center; align-items:center; font-size:0.7rem; color:var(--accent-green);">
+                                    <i class="fa-solid fa-leaf"></i>
+                                </div>
+                            </div>
+                            <span class="text-xs" style="color:var(--accent-green); font-weight:600;">+320 esta semana</span>
+                        </div>
+
+                        <!-- Sequência -->
+                        <div style="border-right: 1px solid var(--card-border); padding-right:1.5rem; text-align:center;">
+                            <span class="text-xs text-muted">Sequência</span>
+                            <h2 style="color:var(--accent-green); margin: 4px 0;"><i class="fa-solid fa-fire" style="margin-right:5px;"></i> 7 dias</h2>
+                            <span class="text-xs text-muted">Mantenha sua sequência!</span>
+                        </div>
+
+                        <!-- Próximo Marco -->
+                        <div style="border-right: 1px solid var(--card-border); padding-right:1.5rem; display:flex; align-items:center; gap:1rem;">
+                            <div style="flex:1;">
+                                <span class="text-xs text-muted">Próximo marco</span>
+                                <h3 style="margin: 2px 0;">Árvore</h3>
+                                <p class="text-xs text-muted mb-2">Faltam 1.550 pontos</p>
+                                <div class="progress-container" style="height:6px;"><div class="progress-fill" style="width:60%;"></div></div>
+                                <div style="display:flex; justify-content:flex-end; margin-top:4px;">
+                                    <span class="text-xs text-muted" style="font-size:0.65rem;">2.450 / 4.000</span>
+                                </div>
+                            </div>
+                            <img src="https://cdn-icons-png.flaticon.com/512/628/628283.png" style="width:45px; height:45px; opacity:0.8; filter:hue-rotate(90deg);">
+                        </div>
+
+                        <!-- Como funciona (box compacta) -->
+                        <div>
+                            <span class="text-xs text-muted mb-2 d-block">Como funciona <i class="fa-solid fa-circle-info" style="font-size:0.7rem;"></i></span>
+                            <div style="background:rgba(255,255,255,0.03); border:1px solid var(--card-border); border-radius:10px; padding:12px; display:flex; align-items:center; justify-content:space-between; gap:10px;">
+                                <div style="text-align:center;">
+                                    <i class="fa-solid fa-bolt" style="font-size:0.8rem; margin-bottom:4px;"></i>
+                                    <p style="font-size:0.6rem; margin:0; line-height:1;">1 kWh economizado</p>
+                                </div>
+                                <i class="fa-solid fa-arrow-right text-muted" style="font-size:0.7rem;"></i>
+                                <div style="text-align:center;">
+                                    <div style="width:20px; height:20px; border-radius:50%; border:1px solid var(--accent-green); display:inline-flex; justify-content:center; align-items:center; font-size:0.6rem; color:var(--accent-green); margin-bottom:4px;">
+                                        <i class="fa-solid fa-leaf"></i>
+                                    </div>
+                                    <p style="font-size:0.6rem; color:var(--accent-green); font-weight:700; margin:0; line-height:1;">10 pontos</p>
+                                </div>
+                            </div>
+                            <p class="text-xs text-muted mt-2" style="font-size:0.65rem; margin:0; line-height:1.2;">Quanto mais você economiza, mais o planeta agradece.</p>
+                        </div>
+                    </div>
+
+                    <!-- Grid de Detalhes -->
+                    <div class="bento-grid" style="grid-template-columns: repeat(12, 1fr);">
+                        <!-- Conquistas -->
+                        <div class="glass-card" style="grid-column: span 3;">
+                            <h4 class="mb-4"><i class="fa-solid fa-trophy mr-2" style="color:var(--accent-green);"></i> Conquistas recentes</h4>
+                            <div style="display:flex; flex-direction:column; gap:1.25rem;">
+                                <div class="eco-ach-item">
+                                    <div class="eco-ach-badge" style="border: 2px solid var(--accent-green); color:var(--accent-green);">7</div>
+                                    <div style="flex:1;">
+                                        <div style="display:flex; justify-content:space-between;">
+                                            <span class="text-sm font-bold">Sequência de 7 dias</span>
+                                            <span class="text-xs" style="color:var(--accent-green);">+150 <i class="fa-solid fa-leaf"></i></span>
+                                        </div>
+                                        <p class="text-xs text-muted">Mantenha o foco!</p>
+                                        <span class="text-xs text-muted" style="font-size:0.65rem;">Hoje</span>
+                                    </div>
+                                </div>
+                                <div class="eco-ach-item">
+                                    <div class="eco-ach-badge" style="background:rgba(0,229,153,0.1); color:var(--accent-green);"><i class="fa-solid fa-leaf"></i></div>
+                                    <div style="flex:1;">
+                                        <div style="display:flex; justify-content:space-between;">
+                                            <span class="text-sm font-bold">Consumo Consciente</span>
+                                            <span class="text-xs" style="color:var(--accent-green);">+100 <i class="fa-solid fa-leaf"></i></span>
+                                        </div>
+                                        <p class="text-xs text-muted">Reduziu 10% hoje</p>
+                                        <span class="text-xs text-muted" style="font-size:0.65rem;">Ontem</span>
+                                    </div>
+                                </div>
+                                <div class="eco-ach-item">
+                                    <div class="eco-ach-badge" style="background:rgba(255,149,0,0.1); color:var(--accent-orange);"><i class="fa-solid fa-bolt"></i></div>
+                                    <div style="flex:1;">
+                                        <div style="display:flex; justify-content:space-between;">
+                                            <span class="text-sm font-bold">Caça ao Desperdício</span>
+                                            <span class="text-xs" style="color:var(--accent-green);">+80 <i class="fa-solid fa-leaf"></i></span>
+                                        </div>
+                                        <p class="text-xs text-muted">Pico reduzido</p>
+                                        <span class="text-xs text-muted" style="font-size:0.65rem;">2 dias atrás</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="#" class="card-link mt-4" style="border-top: 1px solid var(--card-border); padding-top: 1rem;">Ver todas <i class="fa-solid fa-chevron-right"></i></a>
+                        </div>
+
+                        <!-- Desafios -->
+                        <div class="glass-card" style="grid-column: span 6;">
+                            <h4 class="mb-4"><i class="fa-solid fa-crosshairs mr-2" style="color:var(--accent-green);"></i> Próximos desafios</h4>
+                            <div style="display:flex; flex-direction:column; gap:1rem;">
+                                <div style="background:rgba(255,255,255,0.02); border:1px solid var(--card-border); border-radius:12px; padding:1.25rem;">
+                                    <div style="display:flex; gap:1rem; align-items:flex-start; margin-bottom:1rem;">
+                                        <div style="width:32px; height:32px; border-radius:8px; background:rgba(255,149,0,0.1); color:var(--accent-orange); display:flex; justify-content:center; align-items:center;"><i class="fa-solid fa-gear"></i></div>
+                                        <div style="flex:1;">
+                                            <h5 style="margin:0; font-size:0.9rem;">Reduzir 15% do consumo semanal</h5>
+                                            <p class="text-xs text-muted">Meta: 15% de redução vs. semana anterior</p>
+                                        </div>
+                                    </div>
+                                    <div class="progress-container" style="height:6px;"><div class="progress-fill" style="width:8%;"></div></div>
+                                    <div style="display:flex; justify-content:space-between; margin-top:8px;">
+                                        <span class="text-xs font-bold" style="color:var(--accent-green);">Recompensa: <i class="fa-solid fa-leaf mr-1"></i> 250 pts</span>
+                                        <span class="text-xs text-muted">5 dias restantes</span>
+                                    </div>
+                                </div>
+                                <div style="background:rgba(255,255,255,0.02); border:1px solid var(--card-border); border-radius:12px; padding:1.25rem;">
+                                    <div style="display:flex; gap:1rem; align-items:flex-start; margin-bottom:1rem;">
+                                        <div style="width:32px; height:32px; border-radius:8px; background:rgba(255,69,58,0.1); color:var(--accent-red); display:flex; justify-content:center; align-items:center;"><i class="fa-solid fa-fire"></i></div>
+                                        <div style="flex:1;">
+                                            <h5 style="margin:0; font-size:0.9rem;">Manter sequência de 14 dias</h5>
+                                            <p class="text-xs text-muted">Continue economizando todos os dias</p>
+                                        </div>
+                                        <span class="text-xs font-bold">7/14</span>
+                                    </div>
+                                    <div class="progress-container" style="height:6px;"><div class="progress-fill" style="width:50%;"></div></div>
+                                    <div style="display:flex; justify-content:space-between; margin-top:8px;">
+                                        <span class="text-xs font-bold" style="color:var(--accent-green);">Recompensa: <i class="fa-solid fa-leaf mr-1"></i> 150 pts</span>
+                                        <span class="text-xs text-muted">7 dias restantes</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="#" class="card-link mt-4 challenges-open-link">Ver todos os desafios <i class="fa-solid fa-chevron-right"></i></a>
+                        </div>
+
+                        <!-- Ranking -->
+                        <div class="glass-card" style="grid-column: span 3;">
+                            <h4 class="mb-4"><i class="fa-solid fa-chart-simple mr-2" style="color:var(--accent-green);"></i> Ranking local</h4>
+                            <div style="display:flex; gap:1.25rem; margin-bottom:1.5rem; border-bottom:1px solid var(--card-border); padding-bottom:0.5rem;">
+                                <span class="text-sm font-bold" style="color:var(--accent-green); cursor:pointer; border-bottom:2px solid var(--accent-green); padding-bottom:0.5rem;">Local</span>
+                                <span class="text-sm text-muted" style="cursor:pointer;">Empresa</span>
+                            </div>
+                            <div style="display:flex; flex-direction:column; gap:0.75rem;">
+                                <div style="display:flex; align-items:center; gap:0.75rem; padding:0.5rem; border-radius:8px;">
+                                    <i class="fa-solid fa-medal" style="color:#FFD700; width:20px; text-align:center;"></i>
+                                    <img src="https://ui-avatars.com/api/?name=Lucas+M&background=random&size=32" style="width:32px; height:32px; border-radius:50%;">
+                                    <span class="text-sm" style="flex:1;">Lucas M.</span>
+                                    <span class="text-sm text-muted">4.9k <i class="fa-solid fa-leaf"></i></span>
+                                </div>
+                                <div style="display:flex; align-items:center; gap:0.75rem; padding:0.6rem 0.5rem; border-radius:8px; background:rgba(0,229,153,0.07); border:1px solid rgba(0,229,153,0.15);">
+                                    <i class="fa-solid fa-medal" style="color:#CD7F32; width:20px; text-align:center;"></i>
+                                    <img src="https://ui-avatars.com/api/?name=Admin&background=00E599&color=000&size=32" style="width:32px; height:32px; border-radius:50%;">
+                                    <span class="text-sm font-bold" style="flex:1; color:var(--accent-green);">Você</span>
+                                    <span class="text-sm font-bold trend-up">2.4k <i class="fa-solid fa-leaf"></i></span>
+                                </div>
+                                <div style="display:flex; align-items:center; gap:0.75rem; padding:0.5rem; border-radius:8px;">
+                                    <span class="text-muted" style="width:20px; text-align:center; font-weight:600;">4</span>
+                                    <img src="https://ui-avatars.com/api/?name=Mariana+S&background=random&size=32" style="width:32px; height:32px; border-radius:50%;">
+                                    <span class="text-sm" style="flex:1;">Mariana S.</span>
+                                    <span class="text-sm text-muted">1.8k <i class="fa-solid fa-leaf"></i></span>
+                                </div>
+                            </div>
+                            <a href="#" class="card-link mt-4">Ver ranking <i class="fa-solid fa-chevron-right"></i></a>
+                        </div>
+                    </div>
+
+                    <!-- Jornada de Níveis -->
+                    <div class="glass-card">
+                        <h4 class="mb-4">Jornada de Níveis</h4>
+                        <div class="level-journey">
+                            <div class="journey-line"></div>
+                            <div class="journey-line-fill" style="width:25%;"></div>
+                            <div class="journey-step">
+                                <i class="fa-solid fa-seedling text-muted"></i>
+                                <div style="position:absolute; top:52px; text-align:center; width:90px; left:50%; transform:translateX(-50%);">
+                                    <span class="d-block text-xs font-bold">Semente</span>
+                                    <span class="text-xs text-muted">0 – 999 pts</span>
+                                </div>
+                            </div>
+                            <div class="journey-step active">
+                                <div style="width:100%; height:100%; border-radius:50%; background:rgba(0,229,153,0.1); display:flex; justify-content:center; align-items:center; border:2px solid var(--accent-green); box-shadow: 0 0 15px rgba(0,229,153,0.3);">
+                                    <i class="fa-solid fa-seedling" style="color:var(--accent-green);"></i>
+                                </div>
+                                <div style="position:absolute; top:52px; text-align:center; width:110px; left:50%; transform:translateX(-50%);">
+                                    <span class="d-block text-xs font-bold" style="color:var(--accent-green);">Broto</span>
+                                    <span class="text-xs text-muted">1.0k – 3.9k pts</span>
+                                </div>
+                            </div>
+                            <div class="journey-step">
+                                <i class="fa-solid fa-tree text-muted"></i>
+                                <div style="position:absolute; top:52px; text-align:center; width:90px; left:50%; transform:translateX(-50%);">
+                                    <span class="d-block text-xs font-bold">Árvore</span>
+                                    <span class="text-xs text-muted">4.0k – 9.9k pts</span>
+                                </div>
+                            </div>
+                            <div class="journey-step">
+                                <i class="fa-solid fa-mountain-sun text-muted"></i>
+                                <div style="position:absolute; top:52px; text-align:center; width:110px; left:50%; transform:translateX(-50%);">
+                                    <span class="d-block text-xs font-bold">Floresta</span>
+                                    <span class="text-xs text-muted">10k+ pts</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- VIEW: MARKETPLACE DE PARCEIROS -->
+                <section id="view-marketplace" class="view-section">
+                    <header class="page-header">
+                        <h1 class="page-title"><i class="fa-solid fa-cart-shopping" style="color:var(--accent-orange); margin-right: 10px;"></i>Marketplace & Parceiros</h1>
+                        <p class="page-subtitle">Troque seus Eco Pontos por vantagens reais com empresas que financiam créditos de carbono.</p>
+                    </header>
+
+                    <div class="glass-card mb-4" style="background: linear-gradient(135deg, rgba(255,153,0,0.1), transparent);">
+                        <div class="d-flex justify-between align-center">
+                            <div>
+                                <h3 style="color: var(--accent-orange);">Seu Saldo: <span id="marketplaceBalance">2.450</span> pts</h3>
+                                <p class="text-xs text-muted">Continue economizando energia para habilitar descontos maiores.</p>
+                            </div>
+                            <button id="btn-historico-resgates" class="btn-premium"><i class="fa-solid fa-clock-rotate-left"></i> Histórico de Resgates</button>
+                        </div>
+                    </div>
+
+                    <h4 class="mb-3">Ofertas em Destaque</h4>
+                    <div class="bento-grid">
+                        <div class="glass-card" style="grid-column: span 4; display:flex; flex-direction:column; justify-content:space-between; gap: 1rem;">
+                            <div class="d-flex justify-between align-center">
+                                <div style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px;">
+                                    <i class="fa-solid fa-basket-shopping text-2xl text-muted"></i>
+                                </div>
+                                <span class="badge-premium" style="font-size: 0.7rem;">-15% OFF</span>
+                            </div>
+                            <div>
+                                <h4 class="mb-1">Desconto no Supermercado</h4>
+                                <p class="text-xs text-muted">Válido em compras acima de R$ 200 nas redes parceiras.</p>
+                            </div>
+                            <button class="btn-premium-outline w-100" style="margin-top: 10px;">Resgatar (1.500 pts)</button>
+                        </div>
+                        
+                        <div class="glass-card" style="grid-column: span 4; display:flex; flex-direction:column; justify-content:space-between; gap: 1rem;">
+                            <div class="d-flex justify-between align-center">
+                                <div style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px;">
+                                    <i class="fa-solid fa-lightbulb text-2xl text-muted"></i>
+                                </div>
+                                <span class="badge-premium" style="font-size: 0.7rem; background: rgba(0, 255, 136, 0.2); color: var(--accent-green);">Grátis</span>
+                            </div>
+                            <div>
+                                <h4 class="mb-1">Kit Lâmpadas LED</h4>
+                                <p class="text-xs text-muted">Troque 5 lâmpadas velhas por LEDs de alta eficiência.</p>
+                            </div>
+                            <button class="btn-premium-outline w-100" style="margin-top: 10px;">Resgatar (3.000 pts)</button>
+                        </div>
+
+                        <div class="glass-card" style="grid-column: span 4; display:flex; flex-direction:column; justify-content:space-between; gap: 1rem;">
+                            <div class="d-flex justify-between align-center">
+                                <div style="background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px;">
+                                    <i class="fa-solid fa-bolt text-2xl text-muted"></i>
+                                </div>
+                                <span class="badge-premium" style="font-size: 0.7rem;">Cashback</span>
+                            </div>
+                            <div>
+                                <h4 class="mb-1">Abatimento na Fatura</h4>
+                                <p class="text-xs text-muted">Desconto direto de R$ 50,00 na próxima conta de luz.</p>
+                            </div>
+                            <button class="btn-premium-outline w-100" style="margin-top: 10px;" disabled>Faltam 2.550 pts</button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- VIEW: COMUNIDADE GLOBAL -->
+                <section id="view-community" class="view-section">
+                    <header class="page-header">
+                        <h1 class="page-title"><i class="fa-solid fa-earth-americas" style="color:var(--accent-blue); margin-right: 10px;"></i>Comunidade Global</h1>
+                        <p class="page-subtitle">O seu impacto somado ao impacto de milhares de usuários salvando o planeta.</p>
+                    </header>
+                    
+                    <div class="grid-2-cols">
+                        <!-- Meta Coletiva -->
+                        <div class="glass-card" style="background: radial-gradient(circle at top right, rgba(0,163,255,0.05), transparent);">
+                            <h4>Meta da Comunidade (Mês)</h4>
+                            <p class="text-xs text-muted mb-4">A redução coletiva de energia que nossa comunidade visa alcançar.</p>
+                            <div class="d-flex justify-between align-center mb-2">
+                                <span class="font-bold text-lg">7.2 MWh economizados</span>
+                                <span class="text-xs" style="color: var(--accent-blue);">Meta: 10 MWh</span>
+                            </div>
+                            <div class="mini-progress" style="height: 12px; margin-bottom: 1rem;">
+                                <div class="mini-progress-fill" style="width: 72%; background: var(--accent-blue);"></div>
+                            </div>
+                            <p class="text-xs text-muted">Faltam apenas 2.8 MWh. Continue utilizando a IA para evitar desperdícios!</p>
+                        </div>
+                        
+                        <!-- Ranking Global -->
+                        <div class="glass-card">
+                            <h4 class="mb-3"><i class="fa-solid fa-trophy mr-2" style="color: #f59e0b;"></i> Top 5 Eficiência (Global)</h4>
+                            <div class="ranking-list" style="max-height: 250px; overflow-y: auto;">
+                                <div class="ranking-item">
+                                    <div class="rank-pos" style="color: #FFD700; font-size: 1.2rem;"><i class="fa-solid fa-medal"></i></div>
+                                    <div class="rank-avatar">M</div>
+                                    <div class="rank-info">
+                                        <div class="font-bold">Marcos S.</div>
+                                        <div class="text-xs text-muted">São Paulo, BR</div>
+                                    </div>
+                                    <div class="rank-score" style="color: var(--accent-green);">14.250 pts</div>
+                                </div>
+                                <div class="ranking-item">
+                                    <div class="rank-pos" style="color: #C0C0C0; font-size: 1.2rem;"><i class="fa-solid fa-medal"></i></div>
+                                    <div class="rank-avatar" style="background: rgba(0, 163, 255, 0.2); color: var(--accent-blue);">C</div>
+                                    <div class="rank-info">
+                                        <div class="font-bold">Carolina T.</div>
+                                        <div class="text-xs text-muted">Lisboa, PT</div>
+                                    </div>
+                                    <div class="rank-score" style="color: var(--accent-green);">12.100 pts</div>
+                                </div>
+                                <div class="ranking-item">
+                                    <div class="rank-pos" style="color: #CD7F32; font-size: 1.2rem;"><i class="fa-solid fa-medal"></i></div>
+                                    <div class="rank-avatar" style="background: rgba(245, 158, 11, 0.2); color: #f59e0b;">J</div>
+                                    <div class="rank-info">
+                                        <div class="font-bold">João R.</div>
+                                        <div class="text-xs text-muted">Rio de Janeiro, BR</div>
+                                    </div>
+                                    <div class="rank-score" style="color: var(--accent-green);">11.050 pts</div>
+                                </div>
+                                <div class="ranking-item" style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); margin-top: 10px;">
+                                    <div class="rank-pos text-muted">#42</div>
+                                    <div class="rank-avatar">Você</div>
+                                    <div class="rank-info">
+                                        <div class="font-bold">Sua Casa</div>
+                                        <div class="text-xs text-muted">Progresso Constante</div>
+                                    </div>
+                                    <div class="rank-score" style="color: var(--accent-green);">2.450 pts</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+
+                <!-- VIEW: FINANÇAS -->
+                <section id="view-finance" class="view-section">
+                    <header class="page-header">
+                        <h1 class="page-title">Finanças & Histórico</h1>
+                        <p class="page-subtitle">Acompanhe seus gastos, economias e o impacto financeiro da sua energia.</p>
+                    </header>
+
+                    <div class="bento-grid">
+                        <div class="glass-card kpi-card">
+                            <div class="kpi-label"><i class="fa-solid fa-sun" style="color: var(--accent-yellow);"></i> Economia do mês</div>
+                            <div class="kpi-value-row">
+                                <div class="kpi-value">R$ 45,50</div>
+                                <canvas id="sparklineFinance1" class="kpi-sparkline"></canvas>
+                            </div>
+                            <div class="kpi-footer"><span>vs mês anterior</span> <span class="trend-up"><i class="fa-solid fa-caret-up"></i> 15%</span></div>
+                        </div>
+                        <div class="glass-card kpi-card">
+                            <div class="kpi-label"><i class="fa-solid fa-wallet"></i> Gasto atual</div>
+                            <div class="kpi-value-row">
+                                <div class="kpi-value">R$ 94,50</div>
+                                <canvas id="sparklineFinance2" class="kpi-sparkline"></canvas>
+                            </div>
+                            <div class="kpi-footer"><span>Consumo este mês</span></div>
+                        </div>
+                        <div class="glass-card kpi-card">
+                            <div class="kpi-label"><i class="fa-solid fa-receipt"></i> Projeção da conta</div>
+                            <div class="kpi-value-row">
+                                <div class="kpi-value">R$ 142,00</div>
+                                <canvas id="sparklineFinance3" class="kpi-sparkline"></canvas>
+                            </div>
+                            <div class="kpi-footer"><span>Vencimento: 15 Jun 2025</span> <span class="trend-down"><i class="fa-solid fa-caret-down"></i> 18%</span></div>
+                        </div>
+                        <div class="glass-card kpi-card">
+                            <div class="kpi-label"><i class="fa-solid fa-piggy-bank"></i> Economia Acumulada</div>
+                            <div class="kpi-value-row">
+                                <div class="kpi-value">R$ 840,00</div>
+                                <canvas id="sparklineFinance4" class="kpi-sparkline"></canvas>
+                            </div>
+                            <div class="kpi-footer"><span>Desde a instalação</span> <span class="trend-up"><i class="fa-solid fa-caret-up"></i> 23%</span></div>
+                        </div>
+
+                        <!-- Gráficos Financeiros -->
+                        <div class="glass-card" style="grid-column: span 5;">
+                            <div class="d-flex justify-between align-center mb-4">
+                                <h4><i class="fa-solid fa-leaf mr-2" style="color: var(--accent-green);"></i> Economia Mensal (R$)</h4>
+                                <select style="background: var(--bg-deep); border: 1px solid var(--card-border); color: var(--text-muted); border-radius: 4px; padding: 2px 8px; font-size: 0.75rem;">
+                                    <option>2025</option>
+                                </select>
+                            </div>
+                            <div style="height: 250px;">
+                                <canvas id="financeBarChart"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="glass-card" style="grid-column: span 4;">
+                            <div class="d-flex justify-between align-center mb-4">
+                                <h4><i class="fa-solid fa-leaf mr-2" style="color: var(--accent-green);"></i> Consumo Real vs Meta</h4>
+                                <div class="chart-toggle-group finance-consumption-tabs" aria-label="Período de consumo real vs meta">
+                                    <button type="button" class="chart-toggle" data-finance-period="diario">Diário</button>
+                                    <button type="button" class="chart-toggle" data-finance-period="semanal">Semanal</button>
+                                    <button type="button" class="chart-toggle active" data-finance-period="mensal">Mensal</button>
+                                </div>
+                            </div>
+                            <div style="height: 250px;">
+                                <canvas id="financeLineChart"></canvas>
+                            </div>
+                            <div class="chart-context-row" id="financeLineContext">Comparando o mês atual com a meta mensal.</div>
+                        </div>
+
+                        <!-- ROI e Previsão Anual -->
+                        <div class="d-flex flex-column gap-3" style="grid-column: span 3;">
+                            <div class="glass-card">
+                                <div class="d-flex justify-between align-center">
+                                    <h4><i class="fa-solid fa-chart-pie mr-2" style="color: var(--accent-green);"></i> ROI do Sistema</h4>
+                                    <span class="text-xs text-muted">Insights Financeiros</span>
+                                </div>
+                                <div class="d-flex align-center gap-4 mt-4">
+                                    <div style="flex: 1;">
+                                        <h2 style="font-size: 2rem;">3,8 <small style="font-size: 0.8rem; color: var(--text-muted);">meses</small></h2>
+                                        <p class="text-xs">Retorno sobre o investimento</p>
+                                    </div>
+                                    <div style="width: 60px; height: 60px; position: relative;">
+                                        <canvas id="roiCircleChart"></canvas>
+                                        <span style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 0.75rem; font-weight: bold;">76%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="glass-card">
+                                <div class="d-flex justify-between align-center">
+                                    <h4><i class="fa-solid fa-calendar-check mr-2" style="color: var(--accent-blue);"></i> Previsão Anual</h4>
+                                </div>
+                                <h2 class="mt-3">R$ 546,00</h2>
+                                <p class="text-xs">Economia estimada até Dez/2025</p>
+                                <span class="trend-up text-xs mt-2 d-block"><i class="fa-solid fa-caret-up"></i> 24% vs 2024</span>
+                            </div>
+                        </div>
+
+                        <div class="glass-card finance-simulator-card" style="grid-column: span 12;">
+                            <div>
+                                <h4><i class="fa-solid fa-calculator mr-2" style="color: var(--accent-green);"></i> Simulador rápido de economia</h4>
+                                <p class="text-xs text-muted">Ajuste a meta simulada e veja o impacto financeiro e ambiental.</p>
+                            </div>
+                            <div class="finance-sim-controls">
+                                <label>Redução simulada <input id="financeSimRange" type="range" min="5" max="30" value="15"></label>
+                                <span id="financeSimPercent">15%</span>
+                            </div>
+                            <div class="finance-sim-results">
+                                <div><small>Economia mensal</small><strong id="financeSimMonthly">R$ 20,70</strong></div>
+                                <div><small>Economia anual</small><strong id="financeSimYearly">R$ 248,40</strong></div>
+                                <div><small>CO₂ evitado/ano</small><strong id="financeSimCarbon">36 kg</strong></div>
+                            </div>
+                        </div>
+
+                        <!-- Histórico de Contas -->
+                        <div class="glass-card" style="grid-column: span 8;">
+                            <h4><i class="fa-solid fa-file-invoice-dollar mr-2"></i> Histórico de Contas</h4>
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Mês/Ano</th>
+                                        <th>Consumo (kWh)</th>
+                                        <th>Valor da Conta</th>
+                                        <th>Economia (R$)</th>
+                                        <th>Vencimento</th>
+                                        <th>Status</th>
+                                        <th>Ação</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Mai/2025</td>
+                                        <td>180 kWh</td>
+                                        <td>R$ 94,50</td>
+                                        <td style="color: var(--accent-green);">R$ 45,50</td>
+                                        <td>15 Jun 2025</td>
+                                        <td><span class="status-badge" style="font-size: 0.6rem; padding: 2px 8px;">Paga</span></td>
+                                        <td><i class="fa-solid fa-download text-muted"></i></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Abr/2025</td>
+                                        <td>210 kWh</td>
+                                        <td>R$ 105,00</td>
+                                        <td style="color: var(--accent-green);">R$ 40,00</td>
+                                        <td>15 Mai 2025</td>
+                                        <td><span class="status-badge" style="font-size: 0.6rem; padding: 2px 8px;">Paga</span></td>
+                                        <td><i class="fa-solid fa-download text-muted"></i></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Mar/2025</td>
+                                        <td>230 kWh</td>
+                                        <td>R$ 115,00</td>
+                                        <td style="color: var(--accent-green);">R$ 35,00</td>
+                                        <td>15 Abr 2025</td>
+                                        <td><span class="status-badge" style="font-size: 0.6rem; padding: 2px 8px;">Paga</span></td>
+                                        <td><i class="fa-solid fa-download text-muted"></i></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <a href="#" class="card-link mt-3">Ver todas as contas <i class="fa-solid fa-chevron-right"></i></a>
+                        </div>
+
+                        <!-- Insights Financeiros Sidebar -->
+                        <div class="d-flex flex-column gap-3" style="grid-column: span 4;">
+                            <div class="glass-card">
+                                <h4><i class="fa-solid fa-bolt mr-2" style="color: var(--accent-blue);"></i> Melhor ação para economizar</h4>
+                                <div class="ia-content mt-3" style="display: flex; align-items: center; justify-content: space-between; cursor: pointer;">
+                                    <div>
+                                        <h5 class="mb-1">Ajuste do Ar-condicionado</h5>
+                                        <p class="text-xs">Reduza a temperatura para 23 °C no período da noite.</p>
+                                        <p class="text-xs mt-2" style="color: var(--accent-green);">Economia potencial: R$ 31,80/mês</p>
+                                    </div>
+                                    <i class="fa-solid fa-chevron-right text-muted"></i>
+                                </div>
+                            </div>
+                            <div class="glass-card" style="background: rgba(0, 163, 255, 0.03);">
+                                <h4 class="mb-3"><i class="fa-solid fa-wand-magic-sparkles mr-2" style="color: var(--accent-blue);"></i> Nota da IA</h4>
+                                <p class="text-xs">Com base no seu padrão de consumo e nas ações realizadas, nossa IA projeta uma redução de 18% na conta de energia nos próximos 3 meses.</p>
+                                <p class="text-xs mt-3">Mantenha as rotinas ativas para maximizar seus resultados.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!-- VIEW: MODO AMAZÔNIA -->
+                <section id="view-amazon" class="view-section">
+                    <header class="page-header">
+                        <h1 class="page-title"><i class="fa-solid fa-tree" style="color:var(--accent-green); margin-right: 10px;"></i>Modo Amazônia</h1>
+                        <p class="page-subtitle">Sua economia de energia vira impacto ambiental compreensível, com metas, equivalências e ações práticas.</p>
+                    </header>
+
+                    <div class="amazon-hero-clean glass-card">
+                        <div class="amazon-forest-symbol" aria-hidden="true">
+                            <div class="tree-shape tree-a"></div>
+                            <div class="tree-shape tree-b"></div>
+                            <div class="tree-shape tree-c"></div>
+                        </div>
+                        <div class="amazon-hero-copy">
+                            <span class="amazon-status-pill"><i class="fa-solid fa-circle-check"></i> Modo Amazônia ativo</span>
+                            <h2>Transforme economia em impacto visível.</h2>
+                            <p>Cada kWh economizado reduz custos, evita emissões e aproxima você da meta mensal de neutralização.</p>
+                        </div>
+                        <div class="amazon-hero-actions">
+                            <button class="btn-premium"><i class="fa-solid fa-download"></i> Certificado de Impacto</button>
+                            <button class="btn-premium-outline"><i class="fa-solid fa-share-nodes"></i> Compartilhar</button>
+                        </div>
+                    </div>
+
+                    <div class="amazon-impact-grid">
+                        <div class="amazon-metric-card glass-card" data-impact="carbono">
+                            <div class="amazon-metric-icon"><i class="fa-solid fa-leaf"></i></div>
+                            <small>Carbono evitado</small>
+                            <strong>84,2 kg CO₂</strong>
+                            <span class="trend-up"><i class="fa-solid fa-caret-up"></i> 18,5% vs. mês anterior</span>
+                        </div>
+                        <div class="amazon-metric-card glass-card" data-impact="arvores">
+                            <div class="amazon-metric-icon"><i class="fa-solid fa-tree"></i></div>
+                            <small>Árvores equivalentes</small>
+                            <strong>3,5 árvores</strong>
+                            <span class="trend-up"><i class="fa-solid fa-caret-up"></i> 12,2% vs. mês anterior</span>
+                        </div>
+                        <div class="amazon-metric-card glass-card" data-impact="agua">
+                            <div class="amazon-metric-icon blue"><i class="fa-solid fa-droplet"></i></div>
+                            <small>Água preservada</small>
+                            <strong>8.450 litros</strong>
+                            <span class="trend-up blue"><i class="fa-solid fa-caret-up"></i> 16,8% vs. mês anterior</span>
+                        </div>
+                        <div class="amazon-metric-card glass-card" data-impact="area">
+                            <div class="amazon-metric-icon orange"><i class="fa-solid fa-mountain-sun"></i></div>
+                            <small>Área preservada</small>
+                            <strong>12,6 m²</strong>
+                            <span class="trend-up orange"><i class="fa-solid fa-caret-up"></i> 21,4% vs. mês anterior</span>
+                        </div>
+                    </div>
+
+                    <div class="amazon-main-grid">
+                        <div class="glass-card amazon-chart-card">
+                            <div class="d-flex justify-between align-center mb-4">
+                                <div>
+                                    <h4>Evolução do Impacto Ambiental</h4>
+                                    <p class="text-xs text-muted">Acompanhe como sua economia se converte em impacto positivo.</p>
+                                </div>
+                                <div class="amazon-tabs" role="tablist">
+                                    <button class="amazon-tab active" data-amazon-chart="geral">Geral</button>
+                                    <button class="amazon-tab" data-amazon-chart="carbono">Carbono</button>
+                                    <button class="amazon-tab" data-amazon-chart="agua">Água</button>
+                                </div>
+                            </div>
+                            <div class="amazon-chart-wrap">
+                                <canvas id="amazonImpactLineChart"></canvas>
+                            </div>
+                            <div class="amazon-equivalence-strip" id="amazonImpactSummary">
+                                <div><i class="fa-solid fa-globe"></i><small>Impacto vitalício</small><strong>472,8 kg CO₂e evitados</strong></div>
+                                <div><i class="fa-solid fa-car"></i><small>Equivalência</small><strong>2.164 km não rodados</strong></div>
+                                <div><i class="fa-solid fa-bolt"></i><small>Energia otimizada</small><strong>371 kWh economizados</strong></div>
+                            </div>
+                        </div>
+
+                        <div class="glass-card amazon-goal-card">
+                            <div class="d-flex justify-between align-center mb-3">
+                                <h4>Meta ambiental do mês</h4>
+                                <span class="amazon-status-pill compact">76%</span>
+                            </div>
+                            <div class="amazon-goal-layout">
+                                <div class="meta-gauge-container"><canvas id="amazonMetaChart"></canvas><div class="amazon-gauge-center"><strong>76%</strong><small>da meta</small></div></div>
+                                <div class="amazon-goal-list">
+                                    <div><span>Meta mensal</span><strong>110 kg CO₂e</strong></div>
+                                    <div><span>Progresso atual</span><strong>84,2 kg CO₂e</strong></div>
+                                    <div><span>Faltam</span><strong>25,8 kg CO₂e</strong></div>
+                                </div>
+                            </div>
+                            <p class="text-xs text-muted mt-3">Dica: aplicar as automações sugeridas pode completar a meta até o fim do mês.</p>
+                        </div>
+                    </div>
+
+                    <div class="amazon-bottom-grid">
+                        <div class="glass-card">
+                            <h4 class="mb-3">Impacto traduzido</h4>
+                            <div class="impact-translated-grid compact-impact">
+                                <div class="impact-translated-item"><i class="fa-solid fa-car"></i><strong>2.164 km</strong><span>não rodados</span></div>
+                                <div class="impact-translated-item"><i class="fa-solid fa-house"></i><strong>4 casas</strong><span>abastecidas/dia</span></div>
+                                <div class="impact-translated-item"><i class="fa-solid fa-trash"></i><strong>9,1 kg</strong><span>resíduos evitados</span></div>
+                                <div class="impact-translated-item"><i class="fa-solid fa-droplet"></i><strong>8.450 L</strong><span>água preservada</span></div>
+                            </div>
+                        </div>
+
+                        <div class="glass-card">
+                            <h4 class="mb-3">Projetos apoiados</h4>
+                            <div class="project-list no-photo-projects">
+                                <button class="project-item project-button" data-project="Reflorestamento Xingu"><div class="project-icon"><i class="fa-solid fa-seedling"></i></div><div class="project-info"><h5>Reflorestamento Xingu</h5><p class="text-xs text-muted">Recuperação de matas ciliares e nascentes.</p><div class="mini-progress"><div class="mini-progress-fill" style="width:42%;"></div></div><span class="text-xs trend-up">Sua contribuição: 42%</span></div></button>
+                                <button class="project-item project-button" data-project="Proteção de Espécies"><div class="project-icon"><i class="fa-solid fa-paw"></i></div><div class="project-info"><h5>Proteção de Espécies</h5><p class="text-xs text-muted">Monitoramento simbólico de fauna protegida.</p><div class="mini-progress"><div class="mini-progress-fill" style="width:15%;"></div></div><span class="text-xs trend-up">Sua contribuição: 15%</span></div></button>
+                                <button class="project-item project-button" data-project="Energia Limpa Comunitária"><div class="project-icon"><i class="fa-solid fa-solar-panel"></i></div><div class="project-info"><h5>Energia Limpa Comunitária</h5><p class="text-xs text-muted">Energia renovável em comunidades ribeirinhas.</p><div class="mini-progress"><div class="mini-progress-fill" style="width:28%;"></div></div><span class="text-xs trend-up">Sua contribuição: 28%</span></div></button>
+                            </div>
+                        </div>
+
+                        <div class="glass-card">
+                            <h4 class="mb-3">Biodiversidade apoiada</h4>
+                            <div class="biodiversity-supported-grid compact-bio">
+                                <div class="animal-card"><i class="fa-solid fa-cat"></i><strong>Onça-pintada</strong><span>Ameaçada</span></div>
+                                <div class="animal-card"><i class="fa-solid fa-dove"></i><strong>Arara-azul</strong><span>Quase ameaçada</span></div>
+                                <div class="animal-card"><i class="fa-solid fa-fish"></i><strong>Peixe-boi</strong><span>Vulnerável</span></div>
+                                <div class="animal-card"><i class="fa-solid fa-frog"></i><strong>Fauna local</strong><span>Monitorada</span></div>
+                            </div>
+                        </div>
+
+                        <div class="glass-card">
+                            <h4 class="mb-3">Ações recomendadas</h4>
+                            <div class="amazon-action-list">
+                                <button class="amazon-action" data-action="ar"><i class="fa-solid fa-snowflake"></i><div><strong>Ajuste o ar-condicionado</strong><span>Reduza até 15% do consumo</span></div><i class="fa-solid fa-chevron-right"></i></button>
+                                <button class="amazon-action" data-action="led"><i class="fa-solid fa-lightbulb"></i><div><strong>Troque para LEDs</strong><span>Economize e reduza emissões</span></div><i class="fa-solid fa-chevron-right"></i></button>
+                                <button class="amazon-action" data-action="standby"><i class="fa-solid fa-plug-circle-xmark"></i><div><strong>Desligue stand-by</strong><span>Pequenas ações, grande impacto</span></div><i class="fa-solid fa-chevron-right"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- VIEW: CONFIGURAÇÕES -->
+                <section id="view-settings" class="view-section">
+                    <header class="page-header">
+                        <h1 class="page-title">Configurações</h1>
+                        <p class="page-subtitle">Gerencie suas preferências, notificações, integrações e privacidade.</p>
+                    </header>
+
+                    <div class="settings-grid">
+                        <!-- Perfil da Conta -->
+                        <div class="settings-card">
+                            <div class="d-flex align-center gap-2 mb-4" style="color:var(--accent-green);">
+                                <i class="fa-solid fa-user-gear"></i>
+                                <h4 style="color:var(--text-main);">Perfil da conta</h4>
+                            </div>
+                            <div class="profile-section">
+                                <div class="profile-avatar">AD</div>
+                                <div>
+                                    <p class="text-xs text-muted mb-0">Nome</p>
+                                    <div class="font-bold">Administrador</div>
+                                    <p class="text-xs text-muted mb-0 mt-2">E-mail</p>
+                                    <div class="font-bold">admin@ecowatts.com.br</div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <p class="text-xs text-muted mb-0">Tipo de conta</p>
+                                <div class="font-bold">Empresarial</div>
+                            </div>
+                            <div class="mb-4">
+                                <p class="text-xs text-muted mb-0">Plano</p>
+                                <div class="font-bold">EcoWatts Pro</div>
+                            </div>
+                            <button class="btn-settings">Editar perfil</button>
+                        </div>
+
+                        <!-- Preferências -->
+                        <div class="settings-card">
+                            <div class="d-flex align-center gap-2 mb-4" style="color:var(--accent-green);">
+                                <i class="fa-solid fa-sliders"></i>
+                                <h4 style="color:var(--text-main);">Preferências</h4>
+                            </div>
+                            <div class="settings-item">
+                                <div>
+                                    <div class="text-sm font-bold">Tema</div>
+                                    <p class="text-xs text-muted">Escolha entre tema escuro ou claro</p>
+                                </div>
+                                <div class="status-badge" style="background:rgba(255,255,255,0.05); color:var(--text-muted); cursor:pointer;">
+                                    <span style="background:var(--accent-green); color:black; padding:2px 8px; border-radius:4px;"><i class="fa-solid fa-moon"></i> Tema escuro</span>
+                                    <span style="padding:2px 8px;"><i class="fa-solid fa-sun"></i> Tema claro</span>
+                                </div>
+                            </div>
+                            <div class="settings-item">
+                                <div>
+                                    <div class="text-sm font-bold">Unidade de energia</div>
+                                    <p class="text-xs text-muted">Unidade padrão para relatórios</p>
+                                </div>
+                                <select style="background:var(--bg-deep); border:1px solid var(--card-border); color:var(--text-main); padding:4px; border-radius:4px; font-size:0.8rem;">
+                                    <option>kWh</option>
+                                    <option>Wh</option>
+                                </select>
+                            </div>
+                            <div class="settings-item">
+                                <div>
+                                    <div class="text-sm font-bold">Moeda</div>
+                                    <p class="text-xs text-muted">Moeda usada em finanças</p>
+                                </div>
+                                <select style="background:var(--bg-deep); border:1px solid var(--card-border); color:var(--text-main); padding:4px; border-radius:4px; font-size:0.8rem;">
+                                    <option>Real (R$)</option>
+                                    <option>Dólar (US$)</option>
+                                </select>
+                            </div>
+                            <div class="settings-item">
+                                <div>
+                                    <div class="text-sm font-bold">Fuso horário</div>
+                                    <p class="text-xs text-muted">Fuso horário da sua conta</p>
+                                </div>
+                                <select style="background:var(--bg-deep); border:1px solid var(--card-border); color:var(--text-main); padding:4px; border-radius:4px; font-size:0.8rem;">
+                                    <option>(GMT-03:00) Brasília</option>
+                                </select>
+                            </div>
+                            <button class="btn-save mt-4 w-100">Salvar preferências</button>
+                        </div>
+
+                        <!-- Notificações -->
+                        <div class="settings-card">
+                            <div class="d-flex align-center gap-2 mb-4" style="color:var(--accent-green);">
+                                <i class="fa-solid fa-bell"></i>
+                                <h4 style="color:var(--text-main);">Notificações</h4>
+                            </div>
+                            <div class="settings-item">
+                                <div>
+                                    <div class="text-sm font-bold">Alertas de consumo</div>
+                                    <p class="text-xs text-muted" style="font-size:0.65rem;">Alertas quando houver consumo anormal</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="settings-item">
+                                <div>
+                                    <div class="text-sm font-bold">Picos de consumo</div>
+                                    <p class="text-xs text-muted" style="font-size:0.65rem;">Seja notificado sobre picos</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="settings-item">
+                                <div>
+                                    <div class="text-sm font-bold">Relatórios semanais</div>
+                                    <p class="text-xs text-muted" style="font-size:0.65rem;">Receba um resumo semanal</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="settings-item">
+                                <div>
+                                    <div class="text-sm font-bold">Dicas de economia</div>
+                                    <p class="text-xs text-muted" style="font-size:0.65rem;">Sugestões personalizadas</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="settings-item">
+                                <div>
+                                    <div class="text-sm font-bold">Atualizações do sistema</div>
+                                    <p class="text-xs text-muted" style="font-size:0.65rem;">Novidades e melhorias</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <button class="btn-save mt-4 w-100">Salvar notificações</button>
+                        </div>
+
+                        <!-- Automações -->
+                        <div class="settings-card">
+                            <div class="d-flex align-center gap-2 mb-4" style="color:var(--accent-green);">
+                                <i class="fa-solid fa-robot"></i>
+                                <h4 style="color:var(--text-main);">Automações</h4>
+                            </div>
+                            <p class="text-xs text-muted mb-4">Crie regras e ações automáticas para otimizar seu consumo.</p>
+                            <div class="d-flex justify-between align-center p-3 mb-2" style="background:rgba(255,255,255,0.02); border-radius:12px; cursor:pointer; border:1px solid var(--card-border);">
+                                <div>
+                                    <div class="text-sm font-bold">Desligar ar-condicionado</div>
+                                    <p class="text-xs text-muted" style="font-size:0.65rem;">Quando consumo ultrapassar 5,0 kWh</p>
+                                </div>
+                                <div class="d-flex align-center gap-2">
+                                    <span class="text-xs" style="color:var(--accent-green);">Ativa</span>
+                                    <i class="fa-solid fa-chevron-right text-muted" style="font-size:0.7rem;"></i>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-between align-center p-3 mb-2" style="background:rgba(255,255,255,0.02); border-radius:12px; cursor:pointer; border:1px solid var(--card-border);">
+                                <div>
+                                    <div class="text-sm font-bold">Ajustar iluminação</div>
+                                    <p class="text-xs text-muted" style="font-size:0.65rem;">Reduzir intensidade após 22h</p>
+                                </div>
+                                <div class="d-flex align-center gap-2">
+                                    <span class="text-xs" style="color:var(--accent-green);">Ativa</span>
+                                    <i class="fa-solid fa-chevron-right text-muted" style="font-size:0.7rem;"></i>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-between align-center p-3" style="background:rgba(255,255,255,0.02); border-radius:12px; cursor:pointer; border:1px solid var(--card-border);">
+                                <div>
+                                    <div class="text-sm font-bold">Relatório diário</div>
+                                    <p class="text-xs text-muted" style="font-size:0.65rem;">Enviar resumo diário por e-mail</p>
+                                </div>
+                                <div class="d-flex align-center gap-2">
+                                    <span class="text-xs text-muted">Inativa</span>
+                                    <i class="fa-solid fa-chevron-right text-muted" style="font-size:0.7rem;"></i>
+                                </div>
+                            </div>
+                            <button class="btn-settings">Gerenciar automações</button>
+                        </div>
+
+                        <!-- Integrações -->
+                        <div class="settings-card">
+                            <div class="d-flex align-center gap-2 mb-4" style="color:var(--accent-green);">
+                                <i class="fa-solid fa-link"></i>
+                                <h4 style="color:var(--text-main);">Integrações</h4>
+                            </div>
+                            <p class="text-xs text-muted mb-4">Conecte o EcoWatts com outras plataformas e serviços.</p>
+                            <div class="integration-item">
+                                <div class="integration-icon" style="background:#4285F4;"><i class="fa-brands fa-google" style="color:white;"></i></div>
+                                <div style="flex:1;">
+                                    <div class="text-sm font-bold">Google Home</div>
+                                    <p class="text-xs" style="color:var(--accent-green);">Conectado</p>
+                                </div>
+                                <button class="btn-danger" style="padding:4px 8px; font-size:0.7rem;">Desconectar</button>
+                            </div>
+                            <div class="integration-item">
+                                <div class="integration-icon" style="background:#FF9900;"><i class="fa-brands fa-amazon" style="color:white;"></i></div>
+                                <div style="flex:1;">
+                                    <div class="text-sm font-bold">Amazon Alexa</div>
+                                    <p class="text-xs" style="color:var(--accent-green);">Conectado</p>
+                                </div>
+                                <button class="btn-danger" style="padding:4px 8px; font-size:0.7rem;">Desconectar</button>
+                            </div>
+                            <div class="integration-item">
+                                <div class="integration-icon" style="background:#00E599;"><i class="fa-solid fa-solar-panel" style="color:white;"></i></div>
+                                <div style="flex:1;">
+                                    <div class="text-sm font-bold">SolarView</div>
+                                    <p class="text-xs" style="color:var(--accent-green);">Conectado</p>
+                                </div>
+                                <button class="btn-danger" style="padding:4px 8px; font-size:0.7rem;">Desconectar</button>
+                            </div>
+                            <div class="integration-item">
+                                <div class="integration-icon" style="background:#000;"><i class="fa-solid fa-bolt" style="color:white;"></i></div>
+                                <div style="flex:1;">
+                                    <div class="text-sm font-bold">IFTTT</div>
+                                    <p class="text-xs text-muted">Não conectado</p>
+                                </div>
+                                <button class="btn-save" style="padding:4px 8px; font-size:0.7rem; background:rgba(255,255,255,0.1); color:white;">Conectar</button>
+                            </div>
+                            <button class="btn-settings">Ver todas integrações</button>
+                        </div>
+
+                        <!-- Privacidade -->
+                        <div class="settings-card">
+                            <div class="d-flex align-center gap-2 mb-4" style="color:var(--accent-green);">
+                                <i class="fa-solid fa-shield-halved"></i>
+                                <h4 style="color:var(--text-main);">Privacidade</h4>
+                            </div>
+                            <div class="settings-item">
+                                <div>
+                                    <div class="text-sm font-bold">Compartilhamento de dados</div>
+                                    <p class="text-xs text-muted" style="font-size:0.65rem;">Compartilhe dados anonimizados</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="settings-item">
+                                <div>
+                                    <div class="text-sm font-bold">Visibilidade dos dados</div>
+                                    <p class="text-xs text-muted" style="font-size:0.65rem;">Permitir que membros vejam dados</p>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" checked>
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div class="settings-item mt-3">
+                                <div>
+                                    <div class="text-sm font-bold">Exportar meus dados</div>
+                                    <p class="text-xs text-muted" style="font-size:0.65rem;">Baixe um arquivo com seus dados</p>
+                                </div>
+                                <button class="btn-save" style="background:rgba(255,255,255,0.05); color:white;">Exportar</button>
+                            </div>
+                            <div class="settings-item mt-3">
+                                <div>
+                                    <div class="text-sm font-bold">Excluir minha conta</div>
+                                    <p class="text-xs text-muted" style="font-size:0.65rem;">Remova permanentemente sua conta</p>
+                                </div>
+                                <button class="btn-danger">Excluir conta</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <footer class="app-footer">
+                EcoWatts © 2025 • Energia inteligente, futuro sustentável.
+            </footer>
+        </main>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="assets/config.js"></script>
+    <script src="assets/auth.js"></script>
+    <script src="script.js"></script>
+    <script src="assets/live_dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoWatts | Inteligência Energética Amazon Tech</title>
+    <!-- CSS -->
+    <link rel="stylesheet" href="landing.css">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="assets/logo-oficial.jpeg">
+</head>
+<body>
+    
+    <!-- Partículas e Background -->
+    <canvas id="canvas-particles"></canvas>
+    <div class="bg-mesh"></div>
+    <div class="energy-line el-1"></div>
+    <div class="energy-line el-2"></div>
+    <div class="energy-line el-3"></div>
+    <!-- Navbar Premium -->
+    <nav class="navbar">
+        <div class="logo-container">
+            <img src="assets/logo-oficial.jpeg" alt="EcoWatts" class="logo-img">
+            EcoWatts
+        </div>
+        <div class="nav-links">
+            <a href="#proposito">Propósito</a>
+            <a href="#como-funciona">Tecnologia</a>
+            <a href="#ia">IA</a>
+            <a href="#comunidade">Comunidade ESG</a>
+            <a href="#recompensas">Recompensas</a>
+        </div>
+        <a href="login.html" class="btn-secondary">Acessar Painel</a>
+    </nav>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="badge-premium reveal">Monitoramento IoT • ESG • Inteligência Artificial</div>
+        <h1 class="headline-hero reveal">O fim do desperdício invisível.<br>O futuro da eficiência.</h1>
+        <p class="subtext-hero reveal">A EcoWatts transforma o consumo de energia da sua residência ou empresa em dados estruturados. Utilizamos hardware IoT e algoritmos de IA para gerar economia financeira real e impacto ambiental quantificável em minutos.</p>
+        
+        <div class="hero-cta reveal">
+            <a href="login.html" class="btn-primary">Acessar Plataforma <i class="fa-solid fa-arrow-right ml-2"></i></a>
+            <a href="#proposito" class="btn-secondary">Entenda o Projeto</a>
+        </div>
+        <!-- 3D Mockup Futurista -->
+        <div class="mockup-container reveal">
+            <div class="mockup-dashboard">
+                <div class="mock-top">
+                    <div class="mock-dots"><span></span><span></span><span></span></div>
+                    <div style="margin-left: 20px; color: var(--text-muted); font-size: 0.8rem; font-family: monospace;">ecowatts.io/dashboard/realtime</div>
+                </div>
+                <div class="mock-body">
+                    <div class="mock-sidebar">
+                        <div class="mock-line" style="width: 80%"></div>
+                        <div class="mock-line" style="width: 60%"></div>
+                        <div class="mock-line" style="width: 70%"></div>
+                        <div class="mock-line" style="width: 50%; margin-top: 40px;"></div>
+                    </div>
+                    <div class="mock-content">
+                        <div class="mock-card">
+                            <div class="mock-line" style="width: 40%"></div>
+                            <div class="mock-line" style="width: 20%; height: 24px; background: #00ff88; box-shadow: 0 0 10px rgba(0,255,136,0.5);"></div>
+                            <div class="mock-chart"></div>
+                        </div>
+                        <div class="mock-card">
+                            <div class="mock-line" style="width: 50%"></div>
+                            <div class="mock-line" style="width: 30%; height: 24px; background: #00f0ff; box-shadow: 0 0 10px rgba(0,240,255,0.5);"></div>
+                            <div class="mock-chart" style="background: linear-gradient(to top, rgba(0,240,255,0.1), transparent); border-bottom-color: #00f0ff;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Propósito (Problema vs Solução) -->
+    <section id="proposito">
+        <div class="grid-2-cols" style="gap: 4rem; max-width: 1200px; margin: 0 auto;">
+            <div class="reveal">
+                <div class="icon-box red-box"><i class="fa-solid fa-fire text-red"></i></div>
+                <h3 style="font-size: 2rem; margin: 1rem 0;">O Problema</h3>
+                <p class="text-muted" style="font-size: 1.1rem; line-height: 1.6;">Atualmente, o consumo de energia é uma "caixa preta". Residências, escolas e indústrias recebem a conta no fim do mês sem saber de onde veio o gasto. Mais de <strong>30% da energia gerada no mundo é desperdiçada</strong> por falta de monitoramento eficiente, causando um impacto ambiental severo e perdas financeiras silenciosas.</p>
+            </div>
+            <div class="reveal">
+                <div class="icon-box green-box"><i class="fa-solid fa-leaf text-green-neon"></i></div>
+                <h3 style="font-size: 2rem; margin: 1rem 0;">Nossa Missão Institucional</h3>
+                <p class="text-muted" style="font-size: 1.1rem; line-height: 1.6;">O projeto EcoWatts nasceu para democratizar o controle energético. Desenvolvemos um ecossistema completo: sensores (hardware) que leem a corrente elétrica em tempo real, enviados para uma nuvem onde nossa <strong>Inteligência Artificial</strong> detecta anomalias instantaneamente, traduzindo economia em ações reais de preservação ambiental (ESG).</p>
+            </div>
+        </div>
+    </section>
+    <!-- Casos de Uso (Para quem é) -->
+    <section id="casos-uso" style="background: linear-gradient(to top, rgba(0,0,0,0), rgba(0,255,136,0.02)); padding-top: 4rem; padding-bottom: 4rem;">
+        <div style="max-width: 1200px; margin: 0 auto;">
+            <h2 class="section-title reveal" style="margin-bottom: 3rem; font-size: 2.5rem;">Projetado para qualquer escala.</h2>
+            <div class="use-cases-grid">
+                <div class="use-card reveal">
+                    <i class="fa-solid fa-house-chimney"></i>
+                    <h4>Residencial</h4>
+                    <p>Descubra qual eletrodoméstico é o vilão da sua conta e adote hábitos inteligentes com nossa gamificação diária.</p>
+                </div>
+                <div class="use-card reveal" style="transition-delay: 0.1s;">
+                    <i class="fa-solid fa-industry"></i>
+                    <h4>Setor Empresarial</h4>
+                    <p>Mapeamento de demanda de pico e manutenção preventiva de maquinários antes que ocorra uma quebra no padrão elétrico.</p>
+                </div>
+                <div class="use-card reveal" style="transition-delay: 0.2s;">
+                    <i class="fa-solid fa-city"></i>
+                    <h4>Smart Cities & Educação</h4>
+                    <p>Integração em escolas e condomínios para educar cidadãos e atingir metas de descarbonização em larga escala.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Como Funciona (Timeline) -->
+    <section id="como-funciona">
+        <h2 class="section-title reveal">Arquitetura de Engenharia End-to-End</h2>
+        <p class="subtext-hero text-center mb-5 reveal" style="margin: 0 auto 4rem auto;">Entenda o fluxo completo de dados desde o seu quadro de força até a geração do relatório ESG.</p>
+        
+        <div class="timeline-container">
+            <div class="timeline-line"></div>
+            <div class="timeline-glow" id="tl-glow"></div>
+            <div class="timeline-item reveal" data-step="1">
+                <div class="tl-node"><i class="fa-solid fa-microchip"></i></div>
+                <div class="tl-content">
+                    <h3>01. Hardware de Captura IoT</h3>
+                    <p class="text-muted">Instalamos sensores não-invasivos (Sensores de Corrente SCT) pareados com microcontroladores ESP32 diretamente no quadro de distribuição, rastreando a corrente em microssegundos.</p>
+                </div>
+            </div>
+            <div class="timeline-item reveal" data-step="2">
+                <div class="tl-node"><i class="fa-solid fa-cloud-arrow-up"></i></div>
+                <div class="tl-content">
+                    <h3>02. Pipeline em Nuvem</h3>
+                    <p class="text-muted">A leitura analógica é digitalizada e enviada via Wi-Fi/MQTT para nosso banco de dados em nuvem, garantindo segurança e latência próxima a zero na visualização.</p>
+                </div>
+            </div>
+            <div class="timeline-item reveal" data-step="3">
+                <div class="tl-node"><i class="fa-solid fa-brain"></i></div>
+                <div class="tl-content">
+                    <h3>03. Processamento de IA & Regras</h3>
+                    <p class="text-muted">Algoritmos de detecção de padrões classificam o comportamento do uso, identificando se a alta corrente é uma máquina normal operando ou uma anomalia (desperdício) em andamento.</p>
+                </div>
+            </div>
+            <div class="timeline-item reveal" data-step="4">
+                <div class="tl-node"><i class="fa-solid fa-leaf"></i></div>
+                <div class="tl-content">
+                    <h3>04. Conversão ESG & Dashboard</h3>
+                    <p class="text-muted">O sistema final consolida os dados na Plataforma Web (SaaS). A economia energética é matematicamente traduzida em créditos de carbono, mitigação de CO2 e árvores salvas na Amazônia.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- IA Energética -->
+    <section id="ia">
+        <div class="ai-section" style="max-width: 1200px; margin: 0 auto;">
+            <div class="ai-text reveal">
+                <h2 class="section-title" style="text-align: left; margin-bottom: 1.5rem;">Inteligência Artificial:<br>Seu gestor particular.</h2>
+                <p class="subtext-hero" style="margin: 0; margin-bottom: 2rem;">A EcoWatts não entrega apenas gráficos passivos. Nossa plataforma observa os dados e "fala" com você de maneira proativa através de alertas heurísticos e Machine Learning.</p>
+                
+                <ul style="list-style: none; display: flex; flex-direction: column; gap: 1rem;">
+                    <li style="display: flex; gap: 1rem; align-items: flex-start; color: var(--text-muted);">
+                        <i class="fa-solid fa-shield-halved" style="color: var(--cyan-tech); margin-top: 5px;"></i>
+                        <div><strong>Detecção Preditiva:</strong> Identifica aparelhos defeituosos através do ruído do gráfico elétrico antes que eles queimem.</div>
+                    </li>
+                    <li style="display: flex; gap: 1rem; align-items: flex-start; color: var(--text-muted);">
+                        <i class="fa-solid fa-clock-rotate-left" style="color: var(--cyan-tech); margin-top: 5px;"></i>
+                        <div><strong>Mapeamento de Rotina:</strong> Entende o horário padrão de funcionamento da casa e alerta se algo ficar ligado na madrugada.</div>
+                    </li>
+                    <li style="display: flex; gap: 1rem; align-items: flex-start; color: var(--text-muted);">
+                        <i class="fa-solid fa-money-bill-trend-up" style="color: var(--cyan-tech); margin-top: 5px;"></i>
+                        <div><strong>Previsão de Fatura:</strong> Cálculos matemáticos integrados com as bandeiras tarifárias locais (Aneel) projetando o valor final do mês.</div>
+                    </li>
+                </ul>
+            </div>
+            <div class="ai-visual reveal">
+                <div class="orbit orbit-2"></div>
+                <div class="orbit orbit-1"></div>
+                <div class="ai-core"></div>
+                
+                <div class="ai-msg msg-1">
+                    <span style="color: var(--cyan-tech); font-weight: bold;">Risco de Sobrecarga</span><br>Múltiplos aparelhos ligados. O disjuntor pode cair.
+                </div>
+                <div class="ai-msg msg-2">
+                    <span style="color: var(--green-neon); font-weight: bold;">Insight Verde</span><br>Seu padrão atual evita a emissão de 2.1kg de CO₂ hoje.
+                </div>
+                <div class="ai-msg msg-3">
+                    <span style="color: #f59e0b; font-weight: bold;">Previsão de Custo</span><br>Fatura projetada em R$ 145,00. Economia de 12%.
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Impacto Ambiental ESG -->
+    <section id="esg">
+        <h2 class="section-title reveal">Impacto Direto na Amazônia Sustentável</h2>
+        <p class="subtext-hero text-center mb-5 reveal" style="margin: 0 auto 4rem auto;">A tecnologia só faz sentido se proteger o nosso futuro. O EcoWatts traduz energia invisível em métricas ambientais palpáveis para atingir as metas ESG globais.</p>
+        
+        <div class="impact-grid" style="max-width: 1200px; margin: 0 auto;">
+            <div class="impact-card reveal">
+                <i class="fa-solid fa-tree text-green-neon text-3xl mb-3"></i>
+                <div class="impact-number" data-target="15240">0</div>
+                <div class="impact-label">Árvores Equivalentes</div>
+                <p class="text-muted text-sm mt-3">Representação da fotossíntese necessária para neutralizar o desperdício que evitamos.</p>
+            </div>
+            <div class="impact-card reveal" style="border-color: rgba(0,240,255,0.3); background: radial-gradient(circle at bottom, rgba(0,240,255,0.05), transparent);">
+                <i class="fa-solid fa-cloud text-cyan text-3xl mb-3"></i>
+                <div class="impact-number" style="text-shadow: 0 0 20px rgba(0,240,255,0.3);" data-target="843">0</div>
+                <div class="impact-label" style="color: var(--cyan-tech);">Ton CO₂ Evitado</div>
+                <p class="text-muted text-sm mt-3">Ao não consumir energia de matrizes térmicas, bloqueamos a emissão direta de gases.</p>
+            </div>
+            <div class="impact-card reveal">
+                <i class="fa-solid fa-bolt text-green-neon text-3xl mb-3"></i>
+                <div class="impact-number" data-target="1.2">0</div>
+                <div class="impact-label">MWh Otimizados</div>
+                <p class="text-muted text-sm mt-3">Energia que deixou de ser demandada da rede pública graças às ações recomendadas pela IA.</p>
+            </div>
+        </div>
+    </section>
+    </section>
+
+    <!-- Comunidade Voluntária ESG -->
+    <section id="comunidade" style="background: linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,255,136,0.03)); padding-top: 4rem; padding-bottom: 4rem;">
+        <div style="max-width: 1200px; margin: 0 auto;">
+            <div class="grid-2-cols" style="gap: 4rem; align-items: center;">
+                <div class="reveal">
+                    <h2 class="section-title" style="text-align: left; margin-bottom: 1.5rem;">Comunidade Voluntária ESG</h2>
+                    <p class="subtext-hero" style="text-align: left; margin: 0 0 2rem 0;">O EcoWatts não é apenas um monitor residencial, é uma <strong>rede descentralizada de eficiência</strong>. Ao participar, você se junta a uma comunidade comprometida em aliviar a sobrecarga da rede elétrica local e global.</p>
+                    <ul style="list-style: none; display: flex; flex-direction: column; gap: 1rem;">
+                        <li style="display: flex; gap: 1rem; align-items: flex-start; color: var(--text-muted);">
+                            <i class="fa-solid fa-people-group" style="color: var(--green-neon); margin-top: 5px;"></i>
+                            <div><strong>Impacto Coletivo:</strong> Veja como o seu bairro e cidade estão contribuindo para metas ambientais globais em tempo real.</div>
+                        </li>
+                        <li style="display: flex; gap: 1rem; align-items: flex-start; color: var(--text-muted);">
+                            <i class="fa-solid fa-ranking-star" style="color: var(--green-neon); margin-top: 5px;"></i>
+                            <div><strong>Ranking Global:</strong> Dispute saudavelmente a liderança em eficiência energética e inspire outras pessoas.</div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="reveal" style="text-align: center; position: relative;">
+                    <div style="width: 300px; height: 300px; border-radius: 50%; border: 2px dashed rgba(0,255,136,0.3); display: flex; justify-content: center; align-items: center; margin: 0 auto; position: relative;">
+                        <i class="fa-solid fa-earth-americas" style="font-size: 8rem; color: var(--green-neon); opacity: 0.8; filter: drop-shadow(0 0 20px rgba(0,255,136,0.5));"></i>
+                        <!-- Avatares orbitando -->
+                        <img src="https://ui-avatars.com/api/?name=Ana&background=random" style="width: 40px; border-radius: 50%; position: absolute; top: -10px; left: 50%; transform: translateX(-50%); border: 2px solid var(--green-neon);">
+                        <img src="https://ui-avatars.com/api/?name=Joao&background=random" style="width: 40px; border-radius: 50%; position: absolute; bottom: 20px; left: 10px; border: 2px solid var(--cyan-tech);">
+                        <img src="https://ui-avatars.com/api/?name=Maria&background=random" style="width: 40px; border-radius: 50%; position: absolute; bottom: 20px; right: 10px; border: 2px solid #f59e0b;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gamificação, Crédito de Carbono e Marketplace -->
+    <section id="recompensas" style="padding-top: 4rem; padding-bottom: 4rem;">
+        <h2 class="section-title reveal">Seu esforço financia o futuro.</h2>
+        <p class="subtext-hero text-center mb-5 reveal" style="margin: 0 auto 4rem auto;">Nossa inteligência artificial audita sua economia de energia. Essa economia certificada gera <strong>Créditos de Carbono</strong> para empresas parceiras, que em troca oferecem vantagens diretas para você.</p>
+        
+        <div style="max-width: 1200px; margin: 0 auto; display: flex; flex-direction: column; gap: 4rem;">
+            <!-- Ciclo de Recompensa -->
+            <div class="reveal" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; text-align: center;">
+                <div style="background: rgba(18,23,28,0.5); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 2rem; position: relative;">
+                    <i class="fa-solid fa-bolt text-3xl mb-3" style="color: var(--cyan-tech);"></i>
+                    <h4 style="margin-bottom: 10px;">1. Economize</h4>
+                    <p class="text-sm text-muted">Siga as dicas da IA e reduza seu consumo de energia térmica suja.</p>
+                </div>
+                <div style="background: rgba(18,23,28,0.5); border: 1px solid rgba(0,255,136,0.3); border-radius: 16px; padding: 2rem; position: relative; box-shadow: 0 0 20px rgba(0,255,136,0.1);">
+                    <i class="fa-solid fa-leaf text-3xl mb-3" style="color: var(--green-neon);"></i>
+                    <h4 style="margin-bottom: 10px;">2. Ganhe Eco Pontos</h4>
+                    <p class="text-sm text-muted">A economia vira pontos (Gamificação) baseados no impacto real de CO₂ evitado.</p>
+                </div>
+                <div style="background: rgba(18,23,28,0.5); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; padding: 2rem; position: relative;">
+                    <i class="fa-solid fa-bag-shopping text-3xl mb-3" style="color: #f59e0b;"></i>
+                    <h4 style="margin-bottom: 10px;">3. Troque por Vantagens</h4>
+                    <p class="text-sm text-muted">Empresas compram o Crédito de Carbono gerado por você e retribuem com cashback e descontos.</p>
+                </div>
+            </div>
+
+            <!-- Parceiros / Marketplace -->
+            <div class="reveal" style="text-align: center;">
+                <h3 style="font-size: 1.5rem; color: #fff; margin-bottom: 2rem;">Marketplace de Parceiros</h3>
+                <div style="display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap;">
+                    <div style="width: 150px; height: 80px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; display: flex; justify-content: center; align-items: center; font-weight: bold; color: var(--text-muted);">
+                        <i class="fa-solid fa-cart-shopping mr-2"></i> Supermercados
+                    </div>
+                    <div style="width: 150px; height: 80px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; display: flex; justify-content: center; align-items: center; font-weight: bold; color: var(--text-muted);">
+                        <i class="fa-solid fa-plug mr-2"></i> Eletrônicos
+                    </div>
+                    <div style="width: 150px; height: 80px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; display: flex; justify-content: center; align-items: center; font-weight: bold; color: var(--text-muted);">
+                        <i class="fa-solid fa-ticket mr-2"></i> Entretenimento
+                    </div>
+                    <div style="width: 150px; height: 80px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; display: flex; justify-content: center; align-items: center; font-weight: bold; color: var(--text-muted);">
+                        <i class="fa-solid fa-money-bill-wave mr-2"></i> Cashback Fatura
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tecnologias Utilizadas -->
+    <section id="tecnologias" style="background: rgba(0,255,136,0.02); padding-top: 4rem; padding-bottom: 4rem;">
+        <div style="max-width: 1200px; margin: 0 auto; text-align: center;">
+            <h3 style="font-size: 1.5rem; color: var(--text-muted); margin-bottom: 2rem;" class="reveal">Construído com Stack de Classe Mundial</h3>
+            <div class="tech-stack-grid reveal">
+                <div class="tech-tag"><i class="fa-solid fa-microchip text-green-neon"></i> ESP32 & IoT</div>
+                <div class="tech-tag"><i class="fa-brands fa-html5 text-orange"></i> HTML5 & CSS3 Premium</div>
+                <div class="tech-tag"><i class="fa-brands fa-js text-yellow"></i> JavaScript Vanilla</div>
+                <div class="tech-tag"><i class="fa-solid fa-database text-cyan"></i> API REST & Nuvem</div>
+                <div class="tech-tag"><i class="fa-solid fa-chart-line text-red"></i> Chart.js Data Viz</div>
+                <div class="tech-tag"><i class="fa-solid fa-brain text-green-neon"></i> Algoritmos Heurísticos</div>
+            </div>
+        </div>
+    </section>
+    <script>
+        // Sistema Avançado de Scroll Reveal e Animações
+        document.addEventListener('DOMContentLoaded', () => {
+            // Animação de Entrada
+            const reveals = document.querySelectorAll('.reveal');
+            
+            const revealOnScroll = () => {
+                const windowHeight = window.innerHeight;
+                reveals.forEach(el => {
+                    const elementTop = el.getBoundingClientRect().top;
+                    if (elementTop < windowHeight - 100) {
+                        el.style.opacity = '1';
+                        el.style.transform = 'translateY(0)';
+                        
+                        // Se for a timeline, anima ela progressivamente
+                        if(el.classList.contains('timeline-item')) {
+                            el.classList.add('visible');
+                            const step = parseInt(el.getAttribute('data-step'));
+                            document.getElementById('tl-glow').style.height = (step * 25) + '%';
+                        }
+                    }
+                });
+            };
+            // Set Initial state for reveals
+            reveals.forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(30px)';
+                el.style.transition = 'all 0.8s cubic-bezier(0.16, 1, 0.3, 1)';
+            });
+            window.addEventListener('scroll', revealOnScroll);
+            setTimeout(revealOnScroll, 100); // trigger no load
+            // Contadores Animados de Impacto
+            const counters = document.querySelectorAll('.impact-number');
+            let hasCounted = false;
+            const runCounters = () => {
+                counters.forEach(counter => {
+                    const target = parseFloat(counter.getAttribute('data-target'));
+                    const duration = 2000; // 2 segundos
+                    const stepTime = Math.abs(Math.floor(duration / 50));
+                    let current = 0;
+                    
+                    const timer = setInterval(() => {
+                        current += target / 50;
+                        if (current >= target) {
+                            clearInterval(timer);
+                            counter.innerText = target % 1 === 0 ? target.toLocaleString('pt-BR') : target.toFixed(1) + 'M';
+                        } else {
+                            counter.innerText = current % 1 === 0 ? Math.floor(current).toLocaleString('pt-BR') : current.toFixed(1) + 'M';
+                        }
+                    }, stepTime);
+                });
+            };
+            window.addEventListener('scroll', () => {
+                if(!hasCounted && document.getElementById('esg') && document.getElementById('esg').getBoundingClientRect().top < window.innerHeight - 100) {
+                    runCounters();
+                    hasCounted = true;
+                }
+            });
+            // Canvas Particles (Cinematic Tech Background)
+            const canvas = document.getElementById('canvas-particles');
+            if(canvas) {
+                const ctx = canvas.getContext('2d');
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+                let particlesArray = [];
+                const numberOfParticles = 80;
+                class Particle {
+                    constructor() {
+                        this.x = Math.random() * canvas.width;
+                        this.y = Math.random() * canvas.height;
+                        this.size = Math.random() * 2 + 0.5;
+                        this.speedX = Math.random() * 0.5 - 0.25;
+                        this.speedY = Math.random() * -0.5 - 0.1;
+                    }
+                    update() {
+                        this.x += this.speedX;
+                        this.y += this.speedY;
+                        if (this.y < 0) {
+                            this.y = canvas.height;
+                            this.x = Math.random() * canvas.width;
+                        }
+                    }
+                    draw() {
+                        ctx.fillStyle = 'rgba(0, 255, 136, 0.5)';
+                        ctx.beginPath();
+                        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                }
+                for (let i = 0; i < numberOfParticles; i++) {
+                    particlesArray.push(new Particle());
+                }
+                function animateParticles() {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    for (let i = 0; i < particlesArray.length; i++) {
+                        particlesArray[i].update();
+                        particlesArray[i].draw();
+                    }
+                    requestAnimationFrame(animateParticles);
+                }
+                animateParticles();
+                window.addEventListener('resize', () => {
+                    canvas.width = window.innerWidth;
+                    canvas.height = window.innerHeight;
+                });
+            }
+        });
+    </script>
+</body>
+</html>
