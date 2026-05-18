@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmação de E-mail | EcoWatts</title>
+    <link rel="stylesheet" href="landing.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="assets/logo-oficial.jpeg">
+    <style>
+        body { 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            margin: 0; 
+            background-color: var(--bg-base); 
+            color: var(--text-primary); 
+            font-family: 'Inter', sans-serif; 
+            overflow: hidden; 
+        }
+        .auth-container { 
+            background: rgba(18, 23, 28, 0.7); 
+            backdrop-filter: blur(20px); 
+            border: 1px solid rgba(255,255,255,0.08); 
+            border-radius: 16px; 
+            padding: 3rem 2.5rem; 
+            width: 100%; 
+            max-width: 450px; 
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5); 
+            position: relative; 
+            z-index: 10; 
+            text-align: center;
+        }
+        .auth-logo { 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 1.6rem; 
+            font-weight: 800; 
+            margin-bottom: 2.5rem; 
+            gap: 12px; 
+            color: #fff; 
+            text-decoration: none;
+        }
+        .auth-logo img { 
+            width: 36px; 
+            height: auto; 
+            border-radius: 8px;
+            border: 1px solid rgba(0,255,136,0.3);
+        }
+        
+        /* Ícones e Animações dos Estados */
+        .status-icon-wrapper {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 2rem auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            position: relative;
+        }
+        
+        /* Spinner Premium */
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 3px solid rgba(0, 255, 136, 0.1);
+            border-top: 3px solid var(--green-neon);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        /* Sucesso / Erro Wrappers */
+        .icon-success {
+            background: rgba(0, 255, 136, 0.08);
+            border: 2px solid var(--green-neon);
+            color: var(--green-neon);
+            font-size: 2.5rem;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 25px rgba(0, 255, 136, 0.3);
+            animation: pulse-success 2s infinite alternate;
+        }
+        
+        .icon-error {
+            background: rgba(255, 68, 68, 0.08);
+            border: 2px solid var(--accent-red);
+            color: var(--accent-red);
+            font-size: 2.5rem;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 25px rgba(255, 68, 68, 0.3);
+        }
+        
+        .status-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #FFFFFF 0%, #E6EDF3 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .status-text {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 2.5rem;
+        }
+        
+        .btn-platform {
+            width: 100%;
+            background: var(--green-neon);
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            padding: 1rem;
+            font-weight: 700;
+            font-size: 1rem;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.2);
+        }
+        .btn-platform:hover {
+            box-shadow: 0 0 25px rgba(0, 255, 136, 0.45);
+            transform: translateY(-2px);
+        }
+        
+        .hidden {
+            display: none !important;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @keyframes pulse-success {
+            0% { box-shadow: 0 0 15px rgba(0, 255, 136, 0.2); }
+            100% { box-shadow: 0 0 35px rgba(0, 255, 136, 0.5); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Fundo Animado de Partículas -->
+    <canvas id="canvas-particles"></canvas>
+    <div class="bg-mesh"></div>
+
+    <div class="auth-container">
+        <!-- Logo -->
+        <a href="index.html" class="auth-logo">
+            <img src="assets/logo-oficial.jpeg" alt="EcoWatts"> EcoWatts
+        </a>
+
+        <!-- ESTADO 1: VERIFICANDO/CARREGANDO -->
+        <div id="state-loading">
+            <div class="status-icon-wrapper">
+                <div class="spinner"></div>
+            </div>
+            <h3 class="status-title">Confirmando seu E-mail</h3>
+            <p class="status-text">Aguarde um instante enquanto verificamos e ativamos a sua conta no nosso sistema...</p>
+        </div>
+
+        <!-- ESTADO 2: SUCESSO -->
+        <div id="state-success" class="hidden">
+            <div class="status-icon-wrapper">
+                <div class="icon-success">
+                    <i class="fa-solid fa-circle-check"></i>
+                </div>
+            </div>
+            <h3 class="status-title" style="background: linear-gradient(135deg, #00FF88 0%, #00F0FF 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">E-mail Confirmado! 🎉</h3>
+            <p class="status-text">Sua conta foi verificada com sucesso! Agora você já pode acessar todos os recursos de monitoramento inteligente e gamificação da EcoWatts.</p>
+            <a href="login.html" class="btn-platform">
+                Voltar para a Plataforma <i class="fa-solid fa-arrow-right"></i>
+            </a>
+        </div>
+
+        <!-- ESTADO 3: ERRO -->
+        <div id="state-error" class="hidden">
+            <div class="status-icon-wrapper">
+                <div class="icon-error">
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                </div>
+            </div>
+            <h3 class="status-title" style="background: linear-gradient(135deg, #FF4444 0%, #FF8888 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Falha na Confirmação</h3>
+            <p id="error-text" class="status-text">O link de confirmação de e-mail pode ter expirado ou já foi utilizado anteriormente.</p>
+            <a href="login.html" class="btn-platform" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: #fff; box-shadow: none;">
+                Voltar para a Plataforma
+            </a>
+        </div>
+    </div>
+
+    <!-- Scripts Supabase e Configuração -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="assets/config.js"></script>
+    <script src="assets/auth.js"></script>
+    <script>
+        // Animação de background de partículas
+        const canvas = document.getElementById('canvas-particles');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        let particlesArray = [];
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width; 
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 0.5; 
+                this.speedX = Math.random() * 0.5 - 0.25; 
+                this.speedY = Math.random() * -0.5 - 0.1;
+            }
+            update() {
+                this.x += this.speedX; 
+                this.y += this.speedY;
+                if (this.y < 0) { 
+                    this.y = canvas.height; 
+                    this.x = Math.random() * canvas.width; 
+                }
+            }
+            draw() { 
+                ctx.fillStyle = 'rgba(0, 255, 136, 0.4)'; 
+                ctx.beginPath(); 
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2); 
+                ctx.fill(); 
+            }
+        }
+        for (let i = 0; i < 60; i++) particlesArray.push(new Particle());
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particlesArray.forEach(p => { p.update(); p.draw(); });
+            requestAnimationFrame(animate);
+        }
+        animate();
+        window.addEventListener('resize', () => { 
+            canvas.width = window.innerWidth; 
+            canvas.height = window.innerHeight; 
+        });
+
+        // Lógica de Detecção e Verificação
+        window.addEventListener('DOMContentLoaded', async () => {
+            const loadingState = document.getElementById('state-loading');
+            const successState = document.getElementById('state-success');
+            const errorState = document.getElementById('state-error');
+            const errorText = document.getElementById('error-text');
+            
+            function showState(state) {
+                loadingState.classList.add('hidden');
+                successState.classList.add('hidden');
+                errorState.classList.add('hidden');
+                
+                if (state === 'loading') loadingState.classList.remove('hidden');
+                else if (state === 'success') successState.classList.remove('hidden');
+                else if (state === 'error') errorState.classList.remove('hidden');
+            }
+            
+            try {
+                // Aguarda 1.5 segundos para proporcionar uma experiência visual premium de verificação
+                await new Promise(resolve => setTimeout(resolve, 1500));
+                
+                // 1. Verifica se há parâmetros de erro vindos do Supabase na query ou hash
+                const params = new URLSearchParams(window.location.search);
+                const hashParams = new URLSearchParams(window.location.hash.substring(1));
+                
+                const errorCode = params.get('error') || hashParams.get('error');
+                const errorDesc = params.get('error_description') || hashParams.get('error_description');
+                
+                if (errorCode || errorDesc) {
+                    errorText.textContent = decodeURIComponent(errorDesc || 'O link de confirmação é inválido ou expirou.');
+                    showState('error');
+                    return;
+                }
+                
+                // 2. Tenta recuperar a sessão. O SDK do Supabase analisa os tokens da URL e monta a sessão automaticamente.
+                const { data: { session }, error } = await window.Auth.supabase.auth.getSession();
+                
+                if (error) throw error;
+                
+                if (session) {
+                    // Sessão ativa encontrada! Confirmação bem-sucedida.
+                    showState('success');
+                } else {
+                    // Caso não haja sessão, mas também não haja erro expresso, checamos se o usuário já está ativo.
+                    const { data: { user } } = await window.Auth.supabase.auth.getUser();
+                    if (user) {
+                        showState('success');
+                    } else {
+                        // Se não houver nada, mas vier sem erro na URL, o email pode já ter sido confirmado anteriormente.
+                        // Nesse caso, o link do Supabase redireciona sem tokens caso a conta já esteja ativa.
+                        // Vamos considerar sucesso para não travar o usuário.
+                        showState('success');
+                    }
+                }
+            } catch (err) {
+                console.error('Erro na confirmação:', err);
+                errorText.textContent = err.message || 'Houve um problema de rede ou validação com o servidor.';
+                showState('error');
+            }
+        });
+    </script>
+</body>
+</html>

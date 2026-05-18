@@ -46,6 +46,7 @@
         email: email.trim(),
         password,
         options: {
+          emailRedirectTo: window.location.origin + window.location.pathname.replace(/\/[^/]*$/, '/confirmacao.html'),
           data: { full_name: name || 'Usuário EcoWatts' }
         }
       });
