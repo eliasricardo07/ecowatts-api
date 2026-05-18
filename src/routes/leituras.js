@@ -19,10 +19,10 @@ router.post("/", writeLimiter, validateLeitura, async (req, res) => {
     // Formato Multi-Sensor Novo
     if (sensor1 || sensor2 || sensor3 || sensor4) {
       const sensores = [
-        { id_aparelho: 1, dados: sensor1 },
-        { id_aparelho: 2, dados: sensor2 },
-        { id_aparelho: 3, dados: sensor3 },
-        { id_aparelho: 4, dados: sensor4 },
+        { id_aparelho: sensor1?.id_aparelho || 1, dados: sensor1 },
+        { id_aparelho: sensor2?.id_aparelho || 2, dados: sensor2 },
+        { id_aparelho: sensor3?.id_aparelho || 3, dados: sensor3 },
+        { id_aparelho: sensor4?.id_aparelho || 4, dados: sensor4 },
       ];
 
       const registros = [];
