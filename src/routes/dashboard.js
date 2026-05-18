@@ -11,10 +11,57 @@ const router = Router();
 router.get("/resumo", async (req, res) => {
   try {
     const { periodo, id_aparelho } = req.query;
+    const id_usuario = req.headers["x-user-id"] || req.query.id_usuario || "1";
+
+    // 1. Buscar todos os aparelhos pertencentes ao usuário ativo
+    let aparelhosIds = [];
+    try {
+      const { data: aparelhosDoUsuario } = await supabase
+        .from("aparelhos")
+        .select(`
+          id_aparelho,
+          dispositivos!inner (
+            id_unidade,
+            unidades!inner (
+              id_usuario
+            )
+          )
+        `)
+        .eq("dispositivos.unidades.id_usuario", id_usuario);
+
+      if (aparelhosDoUsuario && aparelhosDoUsuario.length > 0) {
+        aparelhosIds = aparelhosDoUsuario.map(a => a.id_aparelho);
+      }
+    } catch (apErr) {
+      logger.error("Erro ao buscar aparelhos do usuário:", apErr.message);
+    }
 
     let query = supabase
       .from("leituras")
-      .select("consumo_kwh, custo_estimado, co2_emitido");
+      .select("consumo_kwh, custo_estimado, co2_emitido, id_aparelho");
+
+    // Filtrar leituras pelos aparelhos do usuário
+    if (aparelhosIds.length > 0) {
+      // Se um aparelho específico for solicitado via query param, filtramos ainda mais
+      if (id_aparelho) {
+        const idApNum = Number(id_aparelho);
+        if (aparelhosIds.includes(idApNum)) {
+          query = query.eq("id_aparelho", idApNum);
+        } else {
+          // O usuário tentou acessar um aparelho que não pertence a ele
+          query = query.eq("id_aparelho", -1);
+        }
+      } else {
+        query = query.in("id_aparelho", aparelhosIds);
+      }
+    } else {
+      // Se não tiver nenhum aparelho e for um usuário novo (diferente da maquete '1'), retornamos vazio
+      if (id_usuario !== "1") {
+        query = query.eq("id_aparelho", -1);
+      } else if (id_aparelho) {
+        query = query.eq("id_aparelho", Number(id_aparelho));
+      }
+    }
 
     // Filtro por período
     if (periodo) {
@@ -41,11 +88,6 @@ router.get("/resumo", async (req, res) => {
       query = query.gte("data_hora", inicio.toISOString());
     }
 
-    // Filtro por aparelho
-    if (id_aparelho) {
-      query = query.eq("id_aparelho", Number(id_aparelho));
-    }
-
     const { data, error } = await query;
 
     if (error) throw error;
@@ -67,9 +109,22 @@ router.get("/resumo", async (req, res) => {
     resumo.total_custo = parseFloat(resumo.total_custo.toFixed(4));
     resumo.total_co2 = parseFloat(resumo.total_co2.toFixed(6));
 
-    // Lógica de Gamificação (On-the-fly)
-    // Exemplo: 100 pontos ganhos para cada 1 kg de CO2 evitado
-    resumo.pontos_gamificacao = Math.floor(resumo.total_co2 * 100);
+    // 2. Buscar a pontuação acumulada real persistida na tabela "pontuacoes"
+    let totalPontos = 0;
+    try {
+      const { data: pontosData, error: pontosErr } = await supabase
+        .from("pontuacoes")
+        .select("pontos")
+        .eq("id_usuario", id_usuario);
+
+      if (!pontosErr && pontosData) {
+        totalPontos = pontosData.reduce((sum, p) => sum + (p.pontos || 0), 0);
+      }
+    } catch (pontosErr) {
+      logger.error("Erro ao buscar pontuação do usuário:", pontosErr.message);
+    }
+
+    resumo.pontos_gamificacao = totalPontos;
 
     res.json({
       periodo: periodo || "total",

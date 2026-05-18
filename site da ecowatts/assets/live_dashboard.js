@@ -105,9 +105,16 @@
   async function fetchAPI(endpoint, options = {}) {
     try {
       const url = window.ENV.API_URL + endpoint;
+      const headers = { 'Content-Type': 'application/json' };
+
+      // Se o usuário estiver autenticado, adiciona o cabeçalho x-user-id
+      if (isAuthenticated && currentUser && currentUser.id) {
+        headers['x-user-id'] = currentUser.id;
+      }
+
       const response = await fetch(url, {
-        headers: { 'Content-Type': 'application/json' },
-        ...options
+        ...options,
+        headers: { ...headers, ...options.headers }
       });
 
       if (!response.ok) {
@@ -204,6 +211,8 @@
 
     const sensorToRoom = { 1: 'cozinha', 2: 'sala', 3: 'quarto', 4: 'escritorio' };
     let totalWatts = 0;
+    let sumIndividualWatts = 0;
+    let hasGeralSensor = false;
     const realtimePoints = [];
 
     res.data.forEach(item => {
@@ -211,7 +220,15 @@
       if (!leitura) return;
 
       const watts = Number(leitura.consumo_watts) || 0;
-      totalWatts += watts;
+      
+      // Diferenciação inteligente: Sensor 1 é o geral (total da maquete), Sensores 2 a 4 são as saídas individuais
+      if (item.id_aparelho === 1) {
+        hasGeralSensor = true;
+        totalWatts = watts;
+      } else {
+        sumIndividualWatts += watts;
+      }
+
       realtimePoints.push(watts);
 
       const roomId = sensorToRoom[item.id_aparelho];
@@ -238,6 +255,11 @@
       // Se este cômodo está selecionado no painel de detalhes, atualiza-o
       updatePanelDetails(roomId, leitura);
     });
+
+    // Se não temos leitura do Sensor 1 (Geral), usamos a soma das saídas individuais
+    if (!hasGeralSensor) {
+      totalWatts = sumIndividualWatts;
+    }
 
     // Atualiza indicador de consumo total em tempo real (Central de Comando)
     updateTotalWattsDisplay(totalWatts);
