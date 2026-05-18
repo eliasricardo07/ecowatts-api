@@ -16,19 +16,55 @@ router.post("/", writeLimiter, validateLeitura, async (req, res) => {
     let leiturasInseridas = [];
     let aparelhosProcessados = [];
 
+    // ============================================================
+    // AUTO-PROVISIONAMENTO DINÂMICO
+    // Garante que toda a árvore de chaves estrangeiras exista no banco
+    // ============================================================
+    const id_disp = req.body.id_dispositivo || 1;
+
+    // 1. Garante que o Usuário 1 exista
+    const { data: userExists } = await supabase.from("usuarios").select("id_usuario").eq("id_usuario", 1).maybeSingle();
+    if (!userExists) {
+      await supabase.from("usuarios").insert([{ id_usuario: 1, nome: "Elias Ricardo", email: "elias@ecowatts.com", senha: "senha123", tipo: "residencial" }]);
+    }
+
+    // 2. Garante que a Unidade 1 exista
+    const { data: unitExists } = await supabase.from("unidades").select("id_unidade").eq("id_unidade", 1).maybeSingle();
+    if (!unitExists) {
+      await supabase.from("unidades").insert([{ id_unidade: 1, nome: "Maquete EcoWatts", tipo: "residencial", id_usuario: 1 }]);
+    }
+
+    // 3. Garante que o Dispositivo exista
+    const { data: dispExists } = await supabase.from("dispositivos").select("id_dispositivo").eq("id_dispositivo", id_disp).maybeSingle();
+    if (!dispExists) {
+      await supabase.from("dispositivos").insert([{ id_dispositivo: id_disp, nome: `Dispositivo ${id_disp}`, localizacao: "Geral", id_unidade: 1 }]);
+    }
+
     // Formato Multi-Sensor Novo
     if (sensor1 || sensor2 || sensor3 || sensor4) {
       const sensores = [
-        { id_aparelho: sensor1?.id_aparelho || 1, dados: sensor1 },
-        { id_aparelho: sensor2?.id_aparelho || 2, dados: sensor2 },
-        { id_aparelho: sensor3?.id_aparelho || 3, dados: sensor3 },
-        { id_aparelho: sensor4?.id_aparelho || 4, dados: sensor4 },
+        { id_aparelho: sensor1?.id_aparelho || 1, dados: sensor1, porta: 1 },
+        { id_aparelho: sensor2?.id_aparelho || 2, dados: sensor2, porta: 2 },
+        { id_aparelho: sensor3?.id_aparelho || 3, dados: sensor3, porta: 3 },
+        { id_aparelho: sensor4?.id_aparelho || 4, dados: sensor4, porta: 4 },
       ];
 
       const registros = [];
 
       for (const sensor of sensores) {
         if (sensor.dados && (sensor.dados.potencia > 0 || sensor.dados.energia > 0 || sensor.dados.custo > 0)) {
+          // 4. Garante que o aparelho do sensor exista na tabela "aparelhos"
+          const { data: apExists } = await supabase.from("aparelhos").select("id_aparelho").eq("id_aparelho", sensor.id_aparelho).maybeSingle();
+          if (!apExists) {
+            await supabase.from("aparelhos").insert([{
+              id_aparelho: sensor.id_aparelho,
+              nome: `Sensor ${sensor.porta}`,
+              potencia_media: 0,
+              id_dispositivo: id_disp
+            }]);
+            logger.info(`Aparelho auto-criado: Sensor ${sensor.porta} (ID: ${sensor.id_aparelho})`);
+          }
+
           const consumo_watts_sensor = sensor.dados.potencia;
           const consumo_kwh_sensor = sensor.dados.energia;
           const custo_estimado_sensor = sensor.dados.custo;
@@ -57,6 +93,17 @@ router.post("/", writeLimiter, validateLeitura, async (req, res) => {
       }
     } else {
       // Formato Antigo Single-Sensor
+      // 4. Garante que o aparelho exista na tabela "aparelhos"
+      const { data: apExists } = await supabase.from("aparelhos").select("id_aparelho").eq("id_aparelho", id_aparelho).maybeSingle();
+      if (!apExists) {
+        await supabase.from("aparelhos").insert([{
+          id_aparelho: id_aparelho,
+          nome: `Aparelho ${id_aparelho}`,
+          potencia_media: 0,
+          id_dispositivo: id_disp
+        }]);
+      }
+
       const { consumo_kwh, custo_estimado, co2_emitido } = processarLeitura(consumo_watts);
 
       const { data, error } = await supabase
