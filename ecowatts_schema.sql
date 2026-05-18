@@ -121,10 +121,11 @@ CREATE TABLE public.resgates (
     criado_em TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now())
 );
 
--- 3. Trigger do Supabase para Sincronização Automática com Auth
+-- 3. Trigger do Supabase para Sincronização Automática com Auth (Versão Blindada com Tratamento de Exceção)
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
 BEGIN
+    -- Tenta cadastrar o perfil público do usuário
     INSERT INTO public.usuarios (id_usuario, nome, email, tipo)
     VALUES (
         NEW.id::text,
@@ -132,13 +133,21 @@ BEGIN
         NEW.email,
         'residencial'
     )
-    ON CONFLICT (id_usuario) DO NOTHING;
+    -- Se o ID já existir, atualiza os dados
+    ON CONFLICT (id_usuario) DO UPDATE
+    SET nome = EXCLUDED.nome, email = EXCLUDED.email;
     
-    -- Auto-provisiona uma unidade padrão para o novo usuário
-    INSERT INTO public.unidades (nome, tipo, id_usuario)
-    VALUES ('Casa Principal', 'residencial', NEW.id::text);
+    -- Auto-provisiona a unidade padrão se ela não existir
+    IF NOT EXISTS (SELECT 1 FROM public.unidades WHERE id_usuario = NEW.id::text) THEN
+        INSERT INTO public.unidades (nome, tipo, id_usuario)
+        VALUES ('Casa Principal', 'residencial', NEW.id::text);
+    END IF;
     
     RETURN NEW;
+EXCEPTION
+    -- Se der qualquer erro no provisionamento, o Supabase Auth ainda concluirá o cadastro com sucesso!
+    WHEN OTHERS THEN
+        RETURN NEW;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 

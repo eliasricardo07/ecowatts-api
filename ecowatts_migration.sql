@@ -92,10 +92,24 @@ CREATE TRIGGER trg_limitar_pontos
     BEFORE INSERT OR UPDATE ON public.pontuacoes
     FOR EACH ROW EXECUTE FUNCTION public.limitar_pontos_telemetria();
 
--- 4. Criação da Trigger do Supabase Auth para Cadastro Automático
+-- 4. Criação da Trigger do Supabase Auth para Cadastro Automático (Versão Blindada com Tratamento de Exceção)
+-- Remove a obrigatoriedade da coluna 'senha' caso ela ainda exista na tabela pública
+DO $$
+BEGIN
+    IF EXISTS (
+        SELECT 1 
+        FROM information_schema.columns 
+        WHERE table_schema='public' AND table_name='usuarios' AND column_name='senha'
+    ) THEN
+        ALTER TABLE public.usuarios ALTER COLUMN senha DROP NOT NULL;
+        ALTER TABLE public.usuarios ALTER COLUMN senha SET DEFAULT '';
+    END IF;
+END $$;
+
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS TRIGGER AS $$
 BEGIN
+    -- Tenta cadastrar o perfil público do usuário
     INSERT INTO public.usuarios (id_usuario, nome, email, tipo)
     VALUES (
         NEW.id::text,
@@ -103,13 +117,21 @@ BEGIN
         NEW.email,
         'residencial'
     )
-    ON CONFLICT (id_usuario) DO NOTHING;
+    -- Se o ID já existir, atualiza os dados
+    ON CONFLICT (id_usuario) DO UPDATE
+    SET nome = EXCLUDED.nome, email = EXCLUDED.email;
     
-    -- Auto-provisiona uma unidade padrão para o novo usuário
-    INSERT INTO public.unidades (nome, tipo, id_usuario)
-    VALUES ('Casa Principal', 'residencial', NEW.id::text);
+    -- Auto-provisiona a unidade padrão se ela não existir
+    IF NOT EXISTS (SELECT 1 FROM public.unidades WHERE id_usuario = NEW.id::text) THEN
+        INSERT INTO public.unidades (nome, tipo, id_usuario)
+        VALUES ('Casa Principal', 'residencial', NEW.id::text);
+    END IF;
     
     RETURN NEW;
+EXCEPTION
+    -- Se der qualquer erro no provisionamento, o Supabase Auth ainda concluirá o cadastro com sucesso!
+    WHEN OTHERS THEN
+        RETURN NEW;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
