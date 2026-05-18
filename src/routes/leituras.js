@@ -16,21 +16,22 @@ router.post("/", writeLimiter, validateLeitura, async (req, res) => {
     let leiturasInseridas = [];
     let aparelhosProcessados = [];
 
-    // ===========================================================    // AUTO-PROVISIONAMENTO DINÂMICO
+    // ============================================================
+    // AUTO-PROVISIONAMENTO DINÂMICO
     // Garante que toda a árvore de chaves estrangeiras exista no banco
     // ============================================================
     const id_disp = req.body.id_dispositivo || 1;
 
-    // 1. Garante que o Usuário '1' exista
-    const { data: userExists } = await supabase.from("usuarios").select("id_usuario").eq("id_usuario", "1").maybeSingle();
+    // 1. Garante que o Usuário 1 exista
+    const { data: userExists } = await supabase.from("usuarios").select("id_usuario").eq("id_usuario", 1).maybeSingle();
     if (!userExists) {
-      await supabase.from("usuarios").insert([{ id_usuario: "1", nome: "Elias Ricardo", email: "elias@ecowatts.com", tipo: "residencial" }]);
+      await supabase.from("usuarios").insert([{ id_usuario: 1, nome: "Elias Ricardo", email: "elias@ecowatts.com", senha: "senha123", tipo: "residencial" }]);
     }
 
     // 2. Garante que a Unidade 1 exista
     const { data: unitExists } = await supabase.from("unidades").select("id_unidade").eq("id_unidade", 1).maybeSingle();
     if (!unitExists) {
-      await supabase.from("unidades").insert([{ id_unidade: 1, nome: "Maquete EcoWatts", tipo: "residencial", id_usuario: "1" }]);
+      await supabase.from("unidades").insert([{ id_unidade: 1, nome: "Maquete EcoWatts", tipo: "residencial", id_usuario: 1 }]);
     }
 
     // 3. Garante que o Dispositivo exista
@@ -119,8 +120,9 @@ router.post("/", writeLimiter, validateLeitura, async (req, res) => {
 
     // ============================================================
     // GAMIFICAÇÃO — Salvar pontos na tabela "pontuacoes"
-    // Evita flood: o usuário ganha pontos uma única vez por dia
+    // (Apenas consideramos o primeiro aparelho para simplificar a gamificação diária por envio)
     // ============================================================
+    let pontuacao_info = null;
     try {
       if (aparelhosProcessados.length > 0) {
         const id_aparelho_gamificacao = aparelhosProcessados[0];
@@ -141,37 +143,35 @@ router.post("/", writeLimiter, validateLeitura, async (req, res) => {
         const id_usuario = aparelhoData?.dispositivos?.unidades?.id_usuario;
 
         if (id_usuario) {
-          const pontos_ganhos = 10; // 10 pontos de atividade diária
-          const hoje = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
+          const pontos_ganhos = 5; // Exemplo: 5 pontos a cada leitura válida registrada
+          const hoje = new Date().toISOString().split("T")[0]; // Retorna no formato YYYY-MM-DD
 
-          // Tenta inserir a pontuação diária ativa
-          // Devido à restrição UNIQUE (id_usuario, data, tipo_ganho), o Supabase rejeitará duplicatas.
-          const { error: insertErr } = await supabase
+          // 2. Verificar se o usuário já possui pontuação registrada hoje
+          const { data: pontuacaoData } = await supabase
             .from("pontuacoes")
-            .insert([{ 
-              id_usuario, 
-              data: hoje, 
-              pontos: pontos_ganhos, 
-              tipo_ganho: 'telemetria_diaria',
-              descricao: 'Presença diária: Telemetria EcoWatts ativa!'
-            }]);
-            
-          if (insertErr) {
-            if (insertErr.code === '23505' || String(insertErr.message).includes('duplicate key')) {
-              // Erro de chave/restrição única duplicada no PostgreSQL (já ganhou os pontos hoje)
-              logger.info(`Pontuação diária já concedida hoje para o usuário ${id_usuario}. Ignorando duplicata.`);
-            } else {
-              logger.warn(`Aviso: Erro ao salvar pontuação de telemetria: ${insertErr.message}`);
-            }
+            .select("id_pontuacao, pontos")
+            .eq("id_usuario", id_usuario)
+            .eq("data", hoje)
+            .single();
+
+          if (pontuacaoData) {
+            // 3a. Se já existe, atualiza somando os pontos novos
+            await supabase
+              .from("pontuacoes")
+              .update({ pontos: pontuacaoData.pontos + pontos_ganhos })
+              .eq("id_pontuacao", pontuacaoData.id_pontuacao);
           } else {
-            logger.success(`EcoPoints! +${pontos_ganhos} pontos de telemetria diária concedidos ao usuário ${id_usuario}`);
+            // 3b. Se não existe, cria o primeiro registro do dia
+            await supabase
+              .from("pontuacoes")
+              .insert([{ id_usuario, data: hoje, pontos: pontos_ganhos }]);
           }
         }
       }
     } catch (gamificacaoErr) {
       logger.error("Aviso: Falha ao registrar pontuação de gamificação:", gamificacaoErr.message);
     }
-    // ========================================================================================
+    // ============================================================
 
     res.status(201).json({
       message: "Leitura registrada e pontuação atualizada com sucesso",
@@ -222,26 +222,14 @@ router.get("/", async (req, res) => {
 // ============================================================
 router.get("/ultimas", async (req, res) => {
   try {
-    const id_usuario = req.headers["x-user-id"] || req.query.id_usuario || "1";
-
-    // Busca os IDs de aparelhos pertencentes ao usuário ativo
+    // Busca os IDs de aparelhos distintos
     const { data: aparelhos, error: errAparelhos } = await supabase
       .from("aparelhos")
-      .select(`
-        id_aparelho, 
-        nome,
-        dispositivos!inner (
-          id_unidade,
-          unidades!inner (
-            id_usuario
-          )
-        )
-      `)
-      .eq("dispositivos.unidades.id_usuario", id_usuario);
+      .select("id_aparelho, nome");
 
     if (errAparelhos) throw errAparelhos;
 
-    // Para cada aparelho do usuário, busca a última leitura
+    // Para cada aparelho, busca a última leitura
     const ultimas = await Promise.all(
       aparelhos.map(async (ap) => {
         const { data, error } = await supabase

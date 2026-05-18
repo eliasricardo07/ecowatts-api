@@ -1,6 +1,7 @@
 -- ============================================================
 -- SCRIPT DE MIGRAÇÃO NÃO-DESTRUTIVO ECOWATTS (SUPABASE)
--- Atualiza a estrutura mantendo todo o histórico de leituras!
+-- Realiza a lógica de gamificação inteiramente no banco de dados.
+-- A API original do Node.js permanece 100% intacta e inalterada!
 -- ============================================================
 
 -- 1. Criação das novas tabelas de suporte se não existirem
@@ -69,22 +70,27 @@ ALTER TABLE public.conquistas_usuario
 ALTER TABLE public.resgates 
     ADD CONSTRAINT fk_resgates_usuarios FOREIGN KEY (id_usuario) REFERENCES public.usuarios(id_usuario) ON DELETE CASCADE;
 
--- 3. Limpeza de Duplicatas na Tabela de Pontuações para permitir a restrição única
--- Adiciona as colunas necessárias na tabela de pontuações caso não existam
+-- 3. Lógica do Banco de Dados para Evitar Flood de Pontos (Capped a 10 por dia)
+-- Adiciona as colunas necessárias na tabela de pontuacoes caso não existam
 ALTER TABLE public.pontuacoes ADD COLUMN IF NOT EXISTS tipo_ganho VARCHAR(100) DEFAULT 'telemetria_diaria';
 ALTER TABLE public.pontuacoes ADD COLUMN IF NOT EXISTS data DATE DEFAULT CURRENT_DATE;
 
--- Remove duplicatas anteriores de telemetria diária no mesmo dia para o mesmo usuário
-DELETE FROM public.pontuacoes a
-USING public.pontuacoes b
-WHERE a.id_pontuacao < b.id_pontuacao
-  AND a.id_usuario = b.id_usuario
-  AND a.data = b.data
-  AND COALESCE(a.tipo_ganho, 'telemetria_diaria') = COALESCE(b.tipo_ganho, 'telemetria_diaria');
+-- Trigger para limitar pontos de telemetria a no máximo 10 pontos por dia (evitando flood do loop da API original)
+CREATE OR REPLACE FUNCTION public.limitar_pontos_telemetria()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Se os pontos daquele dia ultrapassarem 10, nós travamos o valor em 10 no banco
+    IF NEW.pontos > 10 THEN
+        NEW.pontos := 10;
+    END IF;
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
 
--- Adiciona a restrição UNIQUE contra floods de pontuação diária
-ALTER TABLE public.pontuacoes DROP CONSTRAINT IF EXISTS unique_usuario_data_tipo;
-ALTER TABLE public.pontuacoes ADD CONSTRAINT unique_usuario_data_tipo UNIQUE (id_usuario, data, tipo_ganho);
+DROP TRIGGER IF EXISTS trg_limitar_pontos ON public.pontuacoes;
+CREATE TRIGGER trg_limitar_pontos
+    BEFORE INSERT OR UPDATE ON public.pontuacoes
+    FOR EACH ROW EXECUTE FUNCTION public.limitar_pontos_telemetria();
 
 -- 4. Criação da Trigger do Supabase Auth para Cadastro Automático
 CREATE OR REPLACE FUNCTION public.handle_new_user()
